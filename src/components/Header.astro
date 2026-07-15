@@ -1,0 +1,73 @@
+---
+// 全ページ共通のサイトヘッダー。サイト名・タグラインのみのシンプル構成。
+---
+
+<header class="site-header">
+	<div class="site-header__inner">
+		<a href="/" class="site-header__brand">
+			<span class="site-header__mark" aria-hidden="true">PH</span>
+			<span class="site-header__text">
+				<span class="site-header__title">ポーカーハンドメディア</span>
+				<span class="site-header__tagline">WSOP・トリトンの名場面ハンド解説</span>
+			</span>
+		</a>
+	</div>
+</header>
+
+<style>
+	.site-header {
+		position: sticky;
+		top: 0;
+		z-index: 20;
+		background: rgba(255, 255, 255, 0.92);
+		backdrop-filter: saturate(180%) blur(8px);
+		-webkit-backdrop-filter: saturate(180%) blur(8px);
+		border-bottom: 1px solid var(--color-border);
+	}
+	.site-header__inner {
+		max-width: var(--page-width);
+		margin: 0 auto;
+		padding: 0.9em 1.25em;
+	}
+	.site-header__brand {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.75em;
+		text-decoration: none;
+		color: inherit;
+	}
+	.site-header__mark {
+		flex-shrink: 0;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.4em;
+		height: 2.4em;
+		border-radius: var(--radius-md);
+		background: linear-gradient(135deg, var(--color-brand-light), var(--color-ink));
+		color: #fff;
+		font-weight: 800;
+		font-size: 0.95rem;
+		letter-spacing: 0.02em;
+	}
+	.site-header__text {
+		display: flex;
+		flex-direction: column;
+		line-height: 1.3;
+	}
+	.site-header__title {
+		font-size: 1.15rem;
+		font-weight: 800;
+		color: var(--color-ink);
+	}
+	.site-header__tagline {
+		font-size: 0.78rem;
+		color: var(--color-text-muted);
+	}
+
+	@media (max-width: 480px) {
+		.site-header__tagline {
+			display: none;
+		}
+	}
+</style>

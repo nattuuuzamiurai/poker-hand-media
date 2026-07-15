@@ -1,0 +1,52 @@
+---
+// 全ページ共通のサイトフッター。著作権表示・運営概要・広告収益についての明記を含む。
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+	<div class="site-footer__inner">
+		<p class="site-footer__title">ポーカーハンドメディア</p>
+		<p class="site-footer__desc">
+			WSOP・トリトンポーカーなど大型大会で起きた「盛り上がったハンド」を厳選し、プレイヤーの思考プロセスとその判断の評価を独自解説するメディアです。配信・記事の書き起こしではなく、独自の視点でハンドを読み解きます。
+		</p>
+		<p class="site-footer__note">
+			本サイトはアフィリエイトプログラムを含む広告収益により運営しています。オンラインカジノ・オンラインポーカー(実マネー)の紹介は行っていません。
+		</p>
+		<p class="site-footer__copyright">&copy; {year} ポーカーハンドメディア</p>
+	</div>
+</footer>
+
+<style>
+	.site-footer {
+		margin-top: 4em;
+		background: var(--color-ink);
+	}
+	.site-footer__inner {
+		max-width: var(--page-width);
+		margin: 0 auto;
+		padding: 2.5em 1.25em 3em;
+	}
+	.site-footer__title {
+		font-size: 1.05rem;
+		font-weight: 800;
+		color: #fff;
+		margin: 0 0 0.6em;
+	}
+	.site-footer__desc {
+		font-size: 0.88rem;
+		line-height: 1.8;
+		max-width: 560px;
+		margin: 0 0 1em;
+		color: #cdd9d1;
+	}
+	.site-footer__note {
+		font-size: 0.8rem;
+		color: #94a396;
+		margin: 0 0 1.5em;
+	}
+	.site-footer__copyright {
+		font-size: 0.78rem;
+		color: #94a396;
+		margin: 0;
+	}
+</style>

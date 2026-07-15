@@ -1,0 +1,31 @@
+name: Build Check
+
+# PR作成/更新時、および main への push時に型チェックとビルドが通ることを検証する。
+# これ自体はデプロイを行わない(公開はCloudflare Pages側の連携設定に委ねる)。
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  build-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check (astro check)
+        run: npm run check
+
+      - name: Build
+        run: npm run build

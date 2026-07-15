@@ -1,0 +1,79 @@
+---
+// 自社サービス(poker-tourney-log, fukuoka-poker-navi 等)への送客セクション。
+// アフィリエイトASP経由の広告ではなく自社エコシステム内の内部リンクのため、
+// AffiliateProductList(rel="sponsored"・「広告」バッジ)とは区別し、
+// 「広告」表記は付けない(景品表示法上の広告表示義務の対象外)。
+interface RelatedService {
+	name: string;
+	url: string;
+	description?: string;
+}
+
+interface Props {
+	services: RelatedService[];
+}
+
+const { services } = Astro.props;
+---
+
+{
+	services.length > 0 && (
+		<section class="related-services" aria-label="関連サービス">
+			<h2 class="related-services__title">あわせて使いたい自社サービス</h2>
+			<ul class="related-services__items">
+				{services.map((service) => (
+					<li class="related-services__item">
+						<p class="related-services__name">
+							<a href={service.url} target="_blank" rel="noopener noreferrer">
+								{service.name}
+							</a>
+						</p>
+						{service.description && <p class="related-services__desc">{service.description}</p>}
+					</li>
+				))}
+			</ul>
+		</section>
+	)
+}
+
+<style>
+	.related-services {
+		margin: 2em 0 1em;
+		padding: 1.5em 1.75em;
+		background: var(--color-accent-bg);
+		border: 1px solid var(--color-accent-border);
+		border-radius: var(--radius-lg);
+	}
+	.related-services__title {
+		font-size: 1.05rem;
+		font-weight: 800;
+		color: var(--color-ink);
+		margin: 0 0 1em;
+	}
+	.related-services__items {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 1em;
+	}
+	.related-services__item {
+		padding: 0.9em 1em;
+		background: var(--color-bg);
+		border-radius: var(--radius-md);
+		border: 1px solid var(--color-border);
+	}
+	.related-services__name {
+		margin: 0 0 0.3em;
+		font-weight: 700;
+	}
+	.related-services__name a {
+		color: var(--color-brand-dark);
+	}
+	.related-services__desc {
+		margin: 0;
+		font-size: 0.85rem;
+		line-height: 1.7;
+		color: var(--color-text-muted);
+	}
+</style>

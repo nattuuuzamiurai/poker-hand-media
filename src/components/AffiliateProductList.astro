@@ -1,0 +1,140 @@
+---
+// アフィリエイト商品/サービスの一覧表示(Amazonアソシエイト等の物販アフィリを想定)。
+// - 各リンクに rel="sponsored" を付与(Googleのアフィリエイトリンクガイドライン対応)
+// - カードごとに「広告」バッジを表示し、個々のリンクが広告であることも明示する
+// - オンラインカジノ/オンラインポーカー(実マネー)のアフィリエイトはここに含めない
+//   (会社の収益化方針として非採用。企画書「収益化・法務リスク」節参照)
+interface AffiliateProduct {
+	name: string;
+	url: string;
+	price?: string;
+	description?: string;
+	imageUrl?: string;
+}
+
+interface Props {
+	products: AffiliateProduct[];
+}
+
+const { products } = Astro.props;
+---
+
+{
+	products.length > 0 && (
+		<section class="affiliate-list" aria-label="関連商品・サービス">
+			<h2 class="affiliate-list__title">紹介する商品・サービス</h2>
+			<ul class="affiliate-grid">
+				{products.map((product) => (
+					<li class="affiliate-card">
+						<span class="affiliate-card__badge">広告</span>
+						{product.imageUrl && (
+							<div class="affiliate-card__media">
+								<img src={product.imageUrl} alt="" loading="lazy" />
+							</div>
+						)}
+						<p class="affiliate-card__name">{product.name}</p>
+						{product.price && <p class="affiliate-card__price">{product.price}</p>}
+						{product.description && <p class="affiliate-card__desc">{product.description}</p>}
+						<a class="affiliate-card__cta" href={product.url} rel="sponsored noopener noreferrer" target="_blank">
+							詳細を見る <span aria-hidden="true">→</span>
+						</a>
+					</li>
+				))}
+			</ul>
+		</section>
+	)
+}
+
+<style>
+	.affiliate-list {
+		margin: 3em 0 1em;
+		padding: 1.75em;
+		background: var(--color-brand-bg);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-lg);
+	}
+	.affiliate-list__title {
+		font-size: 1.1rem;
+		font-weight: 800;
+		color: var(--color-ink);
+		margin: 0 0 1.1em;
+	}
+	.affiliate-grid {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+		gap: 1.25em;
+	}
+	.affiliate-card {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		background: var(--color-bg);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+		padding: 1.25em;
+		box-shadow: var(--shadow-sm);
+	}
+	.affiliate-card__badge {
+		align-self: flex-start;
+		font-size: 0.68rem;
+		font-weight: 700;
+		background: var(--color-bg-muted);
+		color: var(--color-text-muted);
+		padding: 0.2em 0.6em;
+		border-radius: 4px;
+		margin-bottom: 0.7em;
+	}
+	.affiliate-card__media {
+		margin: 0 0 0.9em;
+		border-radius: var(--radius-sm);
+		overflow: hidden;
+		aspect-ratio: 16 / 9;
+		background: var(--color-bg-muted);
+	}
+	.affiliate-card__media img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+	.affiliate-card__name {
+		font-weight: 700;
+		font-size: 1rem;
+		color: var(--color-ink);
+		margin: 0 0 0.35em;
+		line-height: 1.5;
+	}
+	.affiliate-card__price {
+		font-size: 0.9rem;
+		font-weight: 700;
+		color: var(--color-brand-dark);
+		margin: 0 0 0.5em;
+	}
+	.affiliate-card__desc {
+		flex: 1;
+		font-size: 0.86rem;
+		line-height: 1.75;
+		color: var(--color-text-muted);
+		margin: 0 0 1.1em;
+	}
+	.affiliate-card__cta {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.4em;
+		margin-top: auto;
+		background: var(--color-brand);
+		color: #fff;
+		font-weight: 700;
+		font-size: 0.9rem;
+		text-decoration: none;
+		padding: 0.65em 1em;
+		border-radius: var(--radius-sm);
+		transition: background-color 0.15s ease;
+	}
+	.affiliate-card__cta:hover {
+		background: var(--color-brand-dark);
+	}
+</style>

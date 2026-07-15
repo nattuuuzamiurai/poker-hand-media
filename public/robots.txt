@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://poker-hand-media.pages.dev/sitemap-index.xml

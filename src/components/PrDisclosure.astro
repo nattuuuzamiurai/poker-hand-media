@@ -1,0 +1,45 @@
+---
+// 景品表示法(2023年10月施行のステルスマーケティング規制)対応。
+// アフィリエイトリンクを含む記事には、一般消費者が「広告である」と
+// 明確に認識できる形での表示が法令上必須。
+// このコンポーネントは記事本文の最上部(タイトル直下)に必ず設置すること。
+// 参考: 消費者庁「一般消費者が事業者の表示であることを判別することが困難である表示」の運用基準
+---
+
+<p class="pr-disclosure" role="note">
+	<span class="pr-disclosure__badge">PR</span>
+	<span class="pr-disclosure__text">
+		本記事はアフィリエイト広告(プロモーション)を含みます。ハンドの経過・評価は編集部が情報源をもとに独自に分析した見解です。
+	</span>
+</p>
+
+<style>
+	.pr-disclosure {
+		display: flex;
+		align-items: flex-start;
+		gap: 0.75em;
+		background: var(--color-warn-bg);
+		border: 1px solid var(--color-warn-border);
+		border-radius: var(--radius-md);
+		padding: 0.9em 1.1em;
+		font-size: 0.88rem;
+		line-height: 1.7;
+		color: var(--color-warn-text);
+		margin: 0 0 1.75em 0;
+	}
+	.pr-disclosure__badge {
+		flex-shrink: 0;
+		display: inline-block;
+		background: var(--color-warn-border);
+		color: #fff;
+		font-weight: 800;
+		font-size: 0.7rem;
+		letter-spacing: 0.05em;
+		padding: 0.3em 0.65em;
+		border-radius: 999px;
+		margin-top: 0.1em;
+	}
+	.pr-disclosure__text {
+		flex: 1;
+	}
+</style>

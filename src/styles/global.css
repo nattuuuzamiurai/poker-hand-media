@@ -1,0 +1,103 @@
+/*
+ * デザインシステムの基盤。
+ * - カラー/タイポグラフィ/余白などのトークンを CSS カスタムプロパティで定義
+ * - 最低限のブラウザデフォルトリセット
+ * - Astroのスコープ付きスタイルは Content Collections の render() 経由で
+ *   注入される記事本文(Markdown由来のHTML)には効かないため、
+ *   記事本文向けの見た目は各ページ側で `.prose :global(...)` として定義する
+ *   (このファイルはあくまでサイト全体のトークン & リセットの置き場)
+ */
+
+:root {
+	color-scheme: light;
+
+	/* --- カラー: グリーンフェルト(ポーカーテーブル)を意識した深緑×黒基調 --- */
+	--color-bg: #ffffff;
+	--color-bg-subtle: #f7f9f8;
+	--color-bg-muted: #ecf1ee;
+	--color-border: #dfe7e2;
+	--color-border-strong: #c3d0c9;
+
+	--color-ink: #10231a; /* 見出し・強調テキスト */
+	--color-text: #2c3b33; /* 本文テキスト */
+	--color-text-muted: #4b5c52; /* 補足・メタ情報(AAコントラスト確保) */
+
+	--color-brand: #0b6e4f; /* リンク・アクセント(白背景上でAA合格) */
+	--color-brand-dark: #085539; /* ホバー等の濃色 */
+	--color-brand-light: #2fa876; /* 装飾用の明るいグリーン(大きい要素専用) */
+	--color-brand-bg: #eefaf3; /* うっすらグリーンの背景 */
+	--color-brand-bg-strong: #cdf0dd; /* バッジ・ピル背景 */
+	--color-brand-ink: #085539; /* バッジ背景の上のテキスト */
+
+	--color-accent: #b8863b; /* チップ・カード風のゴールドアクセント(評価・エクイティ強調用) */
+	--color-accent-bg: #fbf1de;
+	--color-accent-border: #e3b566;
+
+	--color-warn-bg: #fffbeb;
+	--color-warn-border: #f59e0b;
+	--color-warn-text: #78350f;
+
+	/* --- タイポグラフィ --- */
+	--font-sans:
+		-apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Noto Sans JP',
+		Meiryo, sans-serif;
+	--font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+
+	/* --- レイアウト --- */
+	--page-width: 1120px;
+	--content-width: 720px;
+
+	--radius-sm: 6px;
+	--radius-md: 10px;
+	--radius-lg: 18px;
+
+	--shadow-sm: 0 1px 2px rgba(16, 35, 26, 0.06);
+	--shadow-md: 0 6px 16px rgba(16, 35, 26, 0.08);
+	--shadow-lg: 0 16px 40px rgba(16, 35, 26, 0.12);
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	-webkit-text-size-adjust: 100%;
+}
+
+body {
+	margin: 0;
+	background: var(--color-bg);
+	color: var(--color-text);
+	font-family: var(--font-sans);
+	font-size: 17px;
+	line-height: 1.8;
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+}
+
+img,
+svg {
+	max-width: 100%;
+	display: block;
+}
+
+a {
+	color: var(--color-brand);
+}
+
+::selection {
+	background: var(--color-brand-bg-strong);
+	color: var(--color-brand-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.001ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.001ms !important;
+	}
+}

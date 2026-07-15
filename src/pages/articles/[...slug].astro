@@ -1,0 +1,452 @@
+---
+// 記事一覧(Content Collections)から動的にページを量産するテンプレート。
+// 新しい記事はMarkdownを追加するだけでこのテンプレートに乗る。
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PrDisclosure from '../../components/PrDisclosure.astro';
+import AffiliateProductList from '../../components/AffiliateProductList.astro';
+import SourceList from '../../components/SourceList.astro';
+import RelatedServices from '../../components/RelatedServices.astro';
+
+export async function getStaticPaths() {
+	// 本番ビルドではdraft記事を除外する(レビュー部のGOが出た記事のみ公開)。
+	// ローカル開発サーバー(`npm run dev`)ではレイアウト確認のためdraftも表示する。
+	const articles = await getCollection('articles', ({ data }) => !data.draft || import.meta.env.DEV);
+	return articles.map((article) => ({
+		params: { slug: article.id },
+		props: { article },
+	}));
+}
+
+const { article } = Astro.props;
+const { Content } = await render(article);
+const {
+	title,
+	metaDescription,
+	pubDate,
+	updatedDate,
+	author,
+	editorialNote,
+	tournament,
+	players,
+	sources,
+	affiliateProducts,
+	relatedServices,
+	targetKeyword,
+	category,
+	draft,
+} = article.data;
+
+const canonicalPath = `/articles/${article.id}/`;
+const publishedISO = pubDate.toISOString();
+const modifiedISO = (updatedDate ?? pubDate).toISOString();
+const keywordList = Array.isArray(targetKeyword) ? targetKeyword.join(', ') : targetKeyword;
+
+// --- schema.org 構造化データ ---
+const articleJsonLd = {
+	'@context': 'https://schema.org',
+	'@type': 'Article',
+	headline: title,
+	description: metaDescription,
+	datePublished: publishedISO,
+	dateModified: modifiedISO,
+	keywords: keywordList,
+	author: {
+		'@type': 'Organization',
+		name: author,
+	},
+	publisher: {
+		'@type': 'Organization',
+		name: 'ポーカーハンドメディア',
+	},
+	mainEntityOfPage: {
+		'@type': 'WebPage',
+		'@id': new URL(canonicalPath, Astro.site).toString(),
+	},
+	...(sources.length > 0 ? { citation: sources.map((s) => s.url) } : {}),
+};
+---
+
+<BaseLayout
+	title={title}
+	description={metaDescription}
+	canonicalPath={canonicalPath}
+	ogType="article"
+	publishedTime={publishedISO}
+	modifiedTime={modifiedISO}
+>
+	<Fragment slot="head">
+		<script type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} is:inline />
+	</Fragment>
+
+	<main class="page">
+		<article class="article">
+			<a class="back-link" href="/">← ポーカーハンドメディア トップへ</a>
+
+			<header class="article__header">
+				{draft && <p class="article__draft-banner">DRAFT(未公開・レイアウト確認用のプレースホルダー記事です)</p>}
+				{category && <p class="article__category">{category}</p>}
+				<h1 class="article__title">{title}</h1>
+				<p class="article__meta">
+					公開日: <time datetime={publishedISO}>{pubDate.toLocaleDateString('ja-JP')}</time>
+					{updatedDate && (
+						<span class="article__meta-sep">
+							/ 更新日: <time datetime={modifiedISO}>{updatedDate.toLocaleDateString('ja-JP')}</time>
+						</span>
+					)}
+					<span class="article__meta-sep">/ 執筆: {author}</span>
+				</p>
+				{(tournament || players.length > 0) && (
+					<div class="article__hand-info">
+						{tournament && <span class="article__tournament">{tournament}</span>}
+						{players.map((player) => (
+							<span class="article__player-tag">{player}</span>
+						))}
+					</div>
+				)}
+			</header>
+
+			<!-- 景品表示法(ステマ規制)対応: 広告である旨の明示 -->
+			<PrDisclosure />
+
+			<div class="prose">
+				<Content />
+			</div>
+
+			<section class="editorial-note">
+				<h2 class="editorial-note__title">編集方針について</h2>
+				<p>{editorialNote}</p>
+			</section>
+
+			<SourceList sources={sources} />
+
+			<AffiliateProductList products={affiliateProducts} />
+
+			<RelatedServices services={relatedServices} />
+		</article>
+	</main>
+</BaseLayout>
+
+<style>
+	.page {
+		max-width: var(--content-width);
+		margin: 0 auto;
+		padding: 2.5em 1.25em 5em;
+	}
+	.back-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.3em;
+		font-size: 0.85rem;
+		font-weight: 600;
+		color: var(--color-text-muted);
+		text-decoration: none;
+		margin-bottom: 2em;
+	}
+	.back-link:hover {
+		color: var(--color-brand);
+	}
+
+	.article__header {
+		margin-bottom: 1.8em;
+	}
+	.article__draft-banner {
+		display: inline-block;
+		font-size: 0.78rem;
+		font-weight: 800;
+		letter-spacing: 0.03em;
+		color: #fff;
+		background: var(--color-warn-border);
+		padding: 0.4em 0.9em;
+		border-radius: var(--radius-sm);
+		margin: 0 0 1em;
+	}
+	.article__category {
+		display: inline-block;
+		font-size: 0.75rem;
+		font-weight: 700;
+		color: var(--color-brand-ink);
+		background: var(--color-brand-bg-strong);
+		padding: 0.3em 0.85em;
+		border-radius: 999px;
+		margin: 0 0 1em;
+	}
+	.article__title {
+		font-size: clamp(1.6rem, 4vw, 2.1rem);
+		font-weight: 800;
+		line-height: 1.5;
+		color: var(--color-ink);
+		margin: 0 0 0.8em;
+		letter-spacing: -0.01em;
+	}
+	.article__meta {
+		font-size: 0.85rem;
+		color: var(--color-text-muted);
+		margin: 0 0 1em;
+	}
+	.article__meta-sep {
+		margin-left: 0.3em;
+	}
+	.article__hand-info {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5em;
+	}
+	.article__tournament {
+		font-size: 0.8rem;
+		font-weight: 700;
+		color: var(--color-accent);
+		background: var(--color-accent-bg);
+		border: 1px solid var(--color-accent-border);
+		padding: 0.3em 0.8em;
+		border-radius: 999px;
+	}
+	.article__player-tag {
+		font-size: 0.8rem;
+		font-weight: 600;
+		color: var(--color-text-muted);
+		background: var(--color-bg-muted);
+		padding: 0.3em 0.8em;
+		border-radius: 999px;
+	}
+
+	.editorial-note {
+		margin-top: 3em;
+		padding: 1.6em 1.8em;
+		background: var(--color-bg-subtle);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-lg);
+	}
+	.editorial-note__title {
+		font-size: 1.05rem;
+		font-weight: 800;
+		color: var(--color-ink);
+		margin: 0 0 0.7em;
+	}
+	.editorial-note p {
+		margin: 0;
+		line-height: 1.85;
+		color: var(--color-text);
+	}
+
+	/*
+	 * 以下は記事本文(Markdown由来のHTML)向けのスタイル。
+	 * `<Content />` が出力する要素はAstroの静的解析対象外のため
+	 * 通常のスコープ付きセレクタは効かない。`:global()` で明示的に
+	 * グローバルスコープへ逃がし、`.prose` 配下に限定して適用する。
+	 * → コンテンツ制作部は特別なタグを使わず、プレーンなMarkdown記法
+	 *   (見出し/番号付きリスト/引用/テーブル)を書くだけでよい。
+	 */
+	.prose {
+		font-size: 1rem;
+		color: var(--color-text);
+		overflow-wrap: break-word;
+		word-break: break-word;
+	}
+	.prose :global(> *:first-child) {
+		margin-top: 0;
+	}
+	.prose :global(h2) {
+		position: relative;
+		font-size: 1.5rem;
+		font-weight: 800;
+		color: var(--color-ink);
+		line-height: 1.5;
+		margin: 2.75em 0 0.9em;
+		padding-left: 0.85em;
+	}
+	.prose :global(h2::before) {
+		content: '';
+		position: absolute;
+		left: 0;
+		top: 0.15em;
+		bottom: 0.15em;
+		width: 5px;
+		border-radius: 3px;
+		background: linear-gradient(180deg, var(--color-brand-light), var(--color-brand));
+	}
+	.prose :global(h3) {
+		font-size: 1.2rem;
+		font-weight: 700;
+		color: var(--color-ink);
+		line-height: 1.5;
+		margin: 2.2em 0 0.7em;
+	}
+	.prose :global(h4) {
+		font-size: 1.05rem;
+		font-weight: 700;
+		color: var(--color-ink);
+		margin: 1.8em 0 0.6em;
+	}
+	.prose :global(p) {
+		line-height: 1.9;
+		margin: 0 0 1.3em;
+	}
+	.prose :global(a) {
+		color: var(--color-brand);
+		text-decoration-thickness: 1.5px;
+		text-underline-offset: 0.15em;
+	}
+	.prose :global(a:hover) {
+		color: var(--color-brand-dark);
+	}
+	.prose :global(strong) {
+		color: var(--color-ink);
+		font-weight: 700;
+	}
+	.prose :global(ul) {
+		margin: 1.3em 0;
+		padding-left: 1.4em;
+	}
+	.prose :global(ul li) {
+		margin-bottom: 0.6em;
+		line-height: 1.85;
+	}
+	.prose :global(ul li::marker) {
+		color: var(--color-brand);
+	}
+
+	/* エクイティ目安・学びのポイントなど、番号付きリストを丸数字ステップ風に */
+	.prose :global(ol) {
+		list-style: none;
+		counter-reset: step;
+		margin: 1.8em 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 1.1em;
+	}
+	.prose :global(ol li) {
+		counter-increment: step;
+		position: relative;
+		padding: 0.15em 0 0.15em 3em;
+		line-height: 1.85;
+		min-height: 2.2em;
+	}
+	.prose :global(ol li::before) {
+		content: counter(step);
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 2.1em;
+		height: 2.1em;
+		border-radius: 50%;
+		background: linear-gradient(135deg, var(--color-brand-light), var(--color-brand));
+		color: #fff;
+		font-weight: 800;
+		font-size: 0.95rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		box-shadow: var(--shadow-sm);
+	}
+
+	/* 学びのポイント・注意用: 引用ブロックをコールアウト風に */
+	.prose :global(blockquote) {
+		margin: 1.8em 0;
+		padding: 1em 1.3em;
+		background: var(--color-brand-bg);
+		border-left: 4px solid var(--color-brand);
+		border-radius: 0 var(--radius-md) var(--radius-md) 0;
+		color: var(--color-text);
+	}
+	.prose :global(blockquote p) {
+		margin: 0;
+		line-height: 1.85;
+	}
+	.prose :global(blockquote p + p) {
+		margin-top: 0.6em;
+	}
+
+	.prose :global(pre) {
+		position: relative;
+		margin: 1.9em 0;
+		padding: 1.3em 1.25em;
+		background: var(--color-ink) !important;
+		color: #e2e8f0 !important;
+		border-radius: var(--radius-md);
+		overflow-x: auto;
+		font-size: 0.88rem;
+		line-height: 1.75;
+		box-shadow: var(--shadow-sm);
+	}
+	.prose :global(pre code) {
+		font-family: var(--font-mono);
+		background: none;
+		padding: 0;
+		color: inherit;
+		font-size: inherit;
+	}
+	.prose :global(code) {
+		font-family: var(--font-mono);
+		background: var(--color-bg-muted);
+		padding: 0.15em 0.4em;
+		border-radius: 4px;
+		font-size: 0.9em;
+		color: var(--color-brand-dark);
+	}
+
+	/* エクイティ目安の比較用: テーブルをストライプ+ヘッダー強調に */
+	.prose :global(table) {
+		width: 100%;
+		border-collapse: collapse;
+		margin: 1.9em 0;
+		font-size: 0.92rem;
+	}
+	.prose :global(th) {
+		background: var(--color-ink);
+		color: #fff;
+		text-align: left;
+		padding: 0.7em 1em;
+		font-weight: 700;
+	}
+	.prose :global(td) {
+		padding: 0.65em 1em;
+		border-bottom: 1px solid var(--color-border);
+	}
+	.prose :global(tbody tr:nth-child(even)) {
+		background: var(--color-bg-subtle);
+	}
+
+	.prose :global(hr) {
+		border: none;
+		border-top: 1px solid var(--color-border);
+		margin: 2.5em 0;
+	}
+	.prose :global(img) {
+		border-radius: var(--radius-md);
+		margin: 1.5em 0;
+	}
+
+	/*
+	 * YouTube公式埋め込み(iframe)のレスポンシブ対応。
+	 * 著作権配慮のため、動画のダウンロード・再アップロードではなく
+	 * YouTube公式の埋め込み機能(iframe)を改変せず使う方針(会社の企画書参照)。
+	 * 執筆側は `<iframe src="https://www.youtube.com/embed/..." ...></iframe>` を
+	 * そのまま本文に貼るだけでよい(下記でレスポンシブ枠に自動整形される)。
+	 */
+	.prose :global(iframe) {
+		width: 100%;
+		aspect-ratio: 16 / 9;
+		height: auto;
+		margin: 1.9em 0;
+		border: none;
+		border-radius: var(--radius-md);
+		box-shadow: var(--shadow-sm);
+	}
+
+	@media (max-width: 640px) {
+		.page {
+			padding: 1.8em 1em 4em;
+		}
+		.prose :global(h2) {
+			font-size: 1.3rem;
+		}
+		.prose :global(pre) {
+			font-size: 0.82rem;
+		}
+		.prose :global(table) {
+			font-size: 0.85rem;
+		}
+	}
+</style>
