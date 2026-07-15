@@ -106,8 +106,8 @@ const articleJsonLd = {
 				)}
 			</header>
 
-			<!-- 景品表示法(ステマ規制)対応: 広告である旨の明示 -->
-			<PrDisclosure />
+			<!-- 景品表示法(ステマ規制)対応: 広告(アフィリエイト商品)がある記事のみ表示 -->
+			{affiliateProducts.length > 0 && <PrDisclosure />}
 
 			<div class="prose">
 				<Content />
