@@ -37,6 +37,10 @@
 	--color-warn-border: #f59e0b;
 	--color-warn-text: #78350f;
 
+	/* --- カードバッジ(ランク+スート)用: ハート/ダイヤ=赤、スペード/クラブ=黒 --- */
+	--color-card-red: #b91c1c; /* 白文字でAAコントラストを確保した赤 */
+	--color-card-black: var(--color-ink);
+
 	/* --- タイポグラフィ --- */
 	--font-sans:
 		-apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Noto Sans JP',
@@ -100,4 +104,41 @@ a {
 		animation-iteration-count: 1 !important;
 		transition-duration: 0.001ms !important;
 	}
+}
+
+/*
+ * カードバッジ(ランク+スート表示)。
+ * - Markdown本文中では `src/lib/rehype-card-badges.ts` が「A♠」等の表記を自動的に
+ *   このマークアップ(<span class="card-badge ...">)へ変換する。
+ * - Astroコンポーネント側(CardBadge.astro / HandProgression.astro 等)でも同じクラスを使う。
+ * 2つの異なる注入経路(rehype生成HTML / 通常のAstroレンダリング)で見た目を揃えるため、
+ * Astroのスコープ付き<style>ではなく、あえてこのグローバルCSSに置いている
+ * (このファイル冒頭のコメント、および .prose :global() の設計方針と同じ理由)。
+ */
+.card-badge {
+	display: inline-flex;
+	align-items: baseline;
+	gap: 0.06em;
+	font-weight: 800;
+	font-size: 0.92em;
+	line-height: 1.3;
+	padding: 0.05em 0.42em 0.14em;
+	border-radius: 5px;
+	color: #fff;
+	white-space: nowrap;
+	margin: 0 0.12em 0 0;
+}
+.card-badge--black {
+	background: var(--color-card-black);
+}
+.card-badge--red {
+	background: var(--color-card-red);
+}
+.card-badge--unknown {
+	background: var(--color-bg-muted);
+	color: var(--color-text-muted);
+	font-weight: 700;
+}
+.card-badge__suit {
+	font-size: 1.05em;
 }

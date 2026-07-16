@@ -55,6 +55,49 @@ const articles = defineCollection({
 		tournament: z.string().optional(), // 大会名・イベント名(例: "WSOP 2026 メインイベント")
 		players: z.array(z.string()).default([]), // 登場プレイヤー名(タグ表示・将来の内部リンクハブに利用)
 
+		// --- トーナメント状況(情報バー。TournamentInfoBarコンポーネントで表示) ---
+		// ハンド解説記事のみで使用する(用語解説記事等では省略してよい。省略時は何も表示されない)。
+		// すべて任意。取材元に記載がない項目は無理に埋めず省略する。
+		// 数値ではなく表示用の文字列で持つ(単位・カンマ区切り・「約」等の表現をそのまま書けるようにするため)。
+		tableContext: z
+			.object({
+				entrants: z.string().optional(), // 参加人数(例: "8,500人")
+				blindLevel: z.string().optional(), // ブラインドレベル SB/BB/アンティ(例: "1,000/2,500(アンティ 2,500)")
+				playersRemaining: z.string().optional(), // 残り人数(例: "3,120人")
+				avgStack: z.string().optional(), // 平均スタック(例: "220,000")
+				heroName: z.string().optional(), // 本人(主役)の名前
+				heroStack: z.string().optional(), // 本人のスタック
+				heroPosition: z.string().optional(), // 本人のポジション(例: "ボタン" "SB" "カットオフ")
+				villainName: z.string().optional(), // 相手の名前
+				villainStack: z.string().optional(), // 相手のスタック
+				villainPosition: z.string().optional(), // 相手のポジション
+			})
+			.optional(),
+
+		// --- ハンド進行表(ストリート別。HandProgressionコンポーネントで表示) ---
+		// プリフロップ→フロップ→ターン→リバーの各ストリートを配列で表現する。
+		// この配列を埋める場合、本文(Markdown)側に「## ハンド経過」の番号付きリストを
+		// 重複して書かない(この構造化データがその節の役割を担う)。
+		// 詳細な書き方・サンプルは docs/article-writing-guide.md 参照。
+		handProgression: z
+			.array(
+				z.object({
+					street: z.string(), // "プリフロップ" "フロップ" "ターン" "リバー" 等(自由記述)
+					board: z.array(z.string()).default([]), // そのストリート時点までのボードカード(例: ["K♠","K♥","7♦"])。プリフロップは省略可
+					pot: z.string().optional(), // そのストリート終了時点のポットサイズ(表示用文字列)
+					actions: z
+						.array(
+							z.object({
+								player: z.string(),
+								action: z.string(), // "オープンレイズ" "3ベット" "コール" "ベット" "フォールド" 等
+								amount: z.string().optional(), // 額(表示用文字列)。フォールド等では省略可
+							}),
+						)
+						.default([]),
+				}),
+			)
+			.default([]),
+
 		// --- 出典(記事の型 7. 出典明記に対応。構造化データとして自動出力する) ---
 		sources: z
 			.array(

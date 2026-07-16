@@ -1,0 +1,40 @@
+---
+// カードバッジ: ランク+スートを色分け表示する最小単位の部品。
+// ハート/ダイヤは赤、スペード/クラブは黒(濃色)で色分けする。
+//
+// 【使い分け】
+// - 記事本文(Markdown)では、このコンポーネントを直接使う必要はない。
+//   これまで通り「A♠」のように書けば rehypeCardBadges(astro.config.mjs)が
+//   自動的に同じ見た目のバッジへ変換する。
+// - このコンポーネントは、フロントマターの構造化データ(handProgression の board 等)を
+//   Astroコンポーネント側(HandProgression.astro / TournamentInfoBar.astro 等)で
+//   明示的に描画したい場合に使う。
+//
+// 見た目のCSS(.card-badge 等)は src/styles/global.css に定義している
+// (rehype変換後の生HTML側でも同じクラスを使うため、Astroのスコープ付き<style>ではなく
+// グローバルCSSに統一している)。
+import { parseCard } from '../lib/cards';
+
+interface Props {
+	/** 例: "A♠" "Kh" "10d" "Ts" */
+	card: string;
+}
+
+const { card } = Astro.props;
+const parsed = parseCard(card);
+---
+
+{
+	parsed ? (
+		<span class={`card-badge ${parsed.colorClass}`}>
+			{parsed.rank}
+			<span class="card-badge__suit" aria-hidden="true">
+				{parsed.suitSymbol}
+			</span>
+		</span>
+	) : (
+		<span class="card-badge card-badge--unknown" title="カード表記を解釈できませんでした">
+			{card}
+		</span>
+	)
+}

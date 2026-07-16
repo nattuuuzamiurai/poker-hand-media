@@ -1,0 +1,186 @@
+---
+// トーナメント情報欄: 参加人数・ブラインドレベル・残り人数・平均スタックと、
+// 本人(主役)・相手それぞれのスタック・ポジションを、記事冒頭でひと目で
+// 把握できるコンパクトな情報バーとして表示する部品。
+//
+// ハンド解説記事のみで使用する(用語解説記事等、特定のハンドの前提を持たない記事では使わない)。
+// フロントマターの `tableContext` オブジェクト(src/content.config.ts)をそのまま
+// スプレッドで渡す想定: `<TournamentInfoBar {...tableContext} />`
+//
+// すべてのフィールドは任意(取材元に記載がない情報は無理に埋めない)。
+// 値が1つも無い場合は何も描画しない。
+interface Props {
+	/** 参加人数(例: "8,500人") */
+	entrants?: string;
+	/** ブラインドレベル(SB/BB/アンティ。例: "1,000/2,500(アンティ 2,500)") */
+	blindLevel?: string;
+	/** 残り人数(例: "3,120人") */
+	playersRemaining?: string;
+	/** 平均スタック(例: "220,000") */
+	avgStack?: string;
+	/** 本人(主役)の名前(任意。無くても「本人」として表示) */
+	heroName?: string;
+	/** 本人のスタック */
+	heroStack?: string;
+	/** 本人のポジション(例: "ボタン" "SB" "カットオフ") */
+	heroPosition?: string;
+	/** 相手の名前(任意。無くても「相手」として表示) */
+	villainName?: string;
+	/** 相手のスタック */
+	villainStack?: string;
+	/** 相手のポジション */
+	villainPosition?: string;
+}
+
+const {
+	entrants,
+	blindLevel,
+	playersRemaining,
+	avgStack,
+	heroName,
+	heroStack,
+	heroPosition,
+	villainName,
+	villainStack,
+	villainPosition,
+} = Astro.props;
+
+const stats = [
+	entrants && { label: '参加人数', value: entrants },
+	blindLevel && { label: 'ブラインド', value: blindLevel },
+	playersRemaining && { label: '残り人数', value: playersRemaining },
+	avgStack && { label: '平均スタック', value: avgStack },
+].filter((s): s is { label: string; value: string } => Boolean(s));
+
+const hasHero = Boolean(heroName || heroStack || heroPosition);
+const hasVillain = Boolean(villainName || villainStack || villainPosition);
+---
+
+{
+	(stats.length > 0 || hasHero || hasVillain) && (
+		<div class="table-context" aria-label="トーナメント状況">
+			{stats.length > 0 && (
+				<ul class="table-context__stats">
+					{stats.map((s) => (
+						<li>
+							<span class="table-context__stat-label">{s.label}</span>
+							<span class="table-context__stat-value">{s.value}</span>
+						</li>
+					))}
+				</ul>
+			)}
+
+			{(hasHero || hasVillain) && (
+				<div class="table-context__players">
+					{hasHero && (
+						<div class="table-context__player table-context__player--hero">
+							<span class="table-context__player-role">本人{heroName && `(${heroName})`}</span>
+							<span class="table-context__player-detail">
+								{heroPosition && <span class="table-context__player-position">{heroPosition}</span>}
+								{heroStack && <span class="table-context__player-stack">{heroStack}</span>}
+							</span>
+						</div>
+					)}
+					{hasVillain && (
+						<div class="table-context__player table-context__player--villain">
+							<span class="table-context__player-role">相手{villainName && `(${villainName})`}</span>
+							<span class="table-context__player-detail">
+								{villainPosition && <span class="table-context__player-position">{villainPosition}</span>}
+								{villainStack && <span class="table-context__player-stack">{villainStack}</span>}
+							</span>
+						</div>
+					)}
+				</div>
+			)}
+		</div>
+	)
+}
+
+<style>
+	.table-context {
+		margin: 0 0 1.8em;
+		padding: 1.1em 1.3em;
+		background: var(--color-bg-subtle);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-lg);
+	}
+	.table-context__stats {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5em;
+	}
+	.table-context__stats li {
+		display: inline-flex;
+		align-items: baseline;
+		gap: 0.35em;
+		font-size: 0.82rem;
+		background: var(--color-bg);
+		border: 1px solid var(--color-border);
+		border-radius: 999px;
+		padding: 0.35em 0.85em;
+	}
+	.table-context__stat-label {
+		color: var(--color-text-muted);
+		font-weight: 700;
+	}
+	.table-context__stat-value {
+		color: var(--color-ink);
+		font-weight: 700;
+	}
+
+	.table-context__players {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 0.75em;
+		margin-top: 0.9em;
+	}
+	.table-context__player {
+		display: flex;
+		flex-direction: column;
+		gap: 0.35em;
+		padding: 0.7em 0.9em;
+		border-radius: var(--radius-md);
+		background: var(--color-bg);
+		border: 1px solid var(--color-border);
+	}
+	.table-context__player--hero {
+		border-left: 4px solid var(--color-brand);
+	}
+	.table-context__player--villain {
+		border-left: 4px solid var(--color-accent);
+	}
+	.table-context__player-role {
+		font-size: 0.78rem;
+		font-weight: 800;
+		color: var(--color-text-muted);
+		letter-spacing: 0.02em;
+	}
+	.table-context__player-detail {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.5em;
+	}
+	.table-context__player-position {
+		font-size: 0.78rem;
+		font-weight: 700;
+		color: var(--color-brand-ink);
+		background: var(--color-brand-bg-strong);
+		padding: 0.2em 0.65em;
+		border-radius: 999px;
+	}
+	.table-context__player-stack {
+		font-size: 0.95rem;
+		font-weight: 800;
+		color: var(--color-ink);
+	}
+
+	@media (max-width: 480px) {
+		.table-context__players {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

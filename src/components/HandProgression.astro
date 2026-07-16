@@ -1,0 +1,163 @@
+---
+// ハンド進行表(ストリート別): プリフロップ→フロップ→ターン→リバーの経過を
+// ボードカード・ポットサイズ・実際のアクションつきで視覚的に整理して見せる部品。
+//
+// フロントマターの `handProgression` 配列(src/content.config.ts)をそのまま渡す想定。
+// 使い方の詳細・サンプルは docs/article-writing-guide.md 参照。
+//
+// 注意: この部品を使う記事では、本文(Markdown)側に「## ハンド経過」の
+// 番号付きリストを重複して書かない(この表がその節の役割を担うため)。
+import CardBadge from './CardBadge.astro';
+
+interface HandAction {
+	/** アクションしたプレイヤー名 */
+	player: string;
+	/** "オープンレイズ" "3ベット" "コール" "ベット" "フォールド" 等 */
+	action: string;
+	/** 額(表示用文字列)。フォールド等、額を伴わないアクションでは省略可 */
+	amount?: string;
+}
+
+interface HandStreet {
+	/** "プリフロップ" "フロップ" "ターン" "リバー" 等(自由記述) */
+	street: string;
+	/** そのストリート時点までに開いたボードカード(例: ["K♠", "K♥", "7♦"])。プリフロップは空でよい */
+	board?: string[];
+	/** そのストリート終了時点のポットサイズ(表示用文字列。例: "82,000") */
+	pot?: string;
+	actions?: HandAction[];
+}
+
+interface Props {
+	streets: HandStreet[];
+}
+
+const { streets } = Astro.props;
+---
+
+{
+	streets && streets.length > 0 && (
+		<div class="hand-progression" role="list" aria-label="ハンド進行(ストリート別)">
+			{streets.map((s) => (
+				<div class="hand-progression__street" role="listitem">
+					<div class="hand-progression__street-head">
+						<span class="hand-progression__street-name">{s.street}</span>
+						{s.pot && <span class="hand-progression__pot">ポット: {s.pot}</span>}
+					</div>
+
+					{s.board && s.board.length > 0 && (
+						<div class="hand-progression__board">
+							{s.board.map((card) => (
+								<CardBadge card={card} />
+							))}
+						</div>
+					)}
+
+					{s.actions && s.actions.length > 0 && (
+						<ul class="hand-progression__actions">
+							{s.actions.map((a) => (
+								<li>
+									<span class="hand-progression__player">{a.player}</span>
+									<span class="hand-progression__action">{a.action}</span>
+									{a.amount && <span class="hand-progression__amount">{a.amount}</span>}
+								</li>
+							))}
+						</ul>
+					)}
+				</div>
+			))}
+		</div>
+	)
+}
+
+<style>
+	.hand-progression {
+		display: flex;
+		flex-direction: column;
+		margin: 1.9em 0;
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-lg);
+		overflow: hidden;
+		box-shadow: var(--shadow-sm);
+	}
+	.hand-progression__street {
+		padding: 1.1em 1.3em;
+		border-bottom: 1px solid var(--color-border);
+		background: var(--color-bg);
+	}
+	.hand-progression__street:last-child {
+		border-bottom: none;
+	}
+	.hand-progression__street:nth-child(even) {
+		background: var(--color-bg-subtle);
+	}
+	.hand-progression__street-head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		gap: 0.6em;
+		margin-bottom: 0.75em;
+	}
+	.hand-progression__street-name {
+		font-weight: 800;
+		font-size: 0.92rem;
+		color: #fff;
+		background: linear-gradient(135deg, var(--color-brand-light), var(--color-brand));
+		padding: 0.32em 0.95em;
+		border-radius: 999px;
+	}
+	.hand-progression__pot {
+		font-size: 0.85rem;
+		font-weight: 700;
+		color: var(--color-accent);
+		background: var(--color-accent-bg);
+		border: 1px solid var(--color-accent-border);
+		padding: 0.28em 0.8em;
+		border-radius: 999px;
+	}
+	.hand-progression__board {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.15em;
+		margin-bottom: 0.75em;
+	}
+	.hand-progression__actions {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5em;
+	}
+	.hand-progression__actions li {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		gap: 0.5em;
+		font-size: 0.92rem;
+		line-height: 1.7;
+	}
+	.hand-progression__player {
+		font-weight: 700;
+		color: var(--color-ink);
+	}
+	.hand-progression__action {
+		color: var(--color-text);
+	}
+	.hand-progression__amount {
+		font-weight: 700;
+		color: var(--color-brand-dark);
+		margin-left: auto;
+	}
+
+	@media (max-width: 640px) {
+		.hand-progression__street {
+			padding: 0.95em 1.1em;
+		}
+		.hand-progression__amount {
+			margin-left: 0;
+		}
+	}
+</style>

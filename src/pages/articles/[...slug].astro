@@ -7,6 +7,8 @@ import PrDisclosure from '../../components/PrDisclosure.astro';
 import AffiliateProductList from '../../components/AffiliateProductList.astro';
 import SourceList from '../../components/SourceList.astro';
 import RelatedServices from '../../components/RelatedServices.astro';
+import TournamentInfoBar from '../../components/TournamentInfoBar.astro';
+import HandProgression from '../../components/HandProgression.astro';
 
 export async function getStaticPaths() {
 	// 本番ビルドではdraft記事を除外する(レビュー部のGOが出た記事のみ公開)。
@@ -35,6 +37,8 @@ const {
 	targetKeyword,
 	category,
 	draft,
+	tableContext,
+	handProgression,
 } = article.data;
 
 const canonicalPath = `/articles/${article.id}/`;
@@ -108,6 +112,12 @@ const articleJsonLd = {
 
 			<!-- 景品表示法(ステマ規制)対応: 広告(アフィリエイト商品)がある記事のみ表示 -->
 			{affiliateProducts.length > 0 && <PrDisclosure />}
+
+			<!-- トーナメント状況(参加人数・ブラインド・両者のスタック/ポジション等)。用語解説記事等ではフロントマターに未設定のため非表示 -->
+			{tableContext && <TournamentInfoBar {...tableContext} />}
+
+			<!-- ハンド進行表(ストリート別)。設定されている場合は「## ハンド経過」の代わりにここで表示する -->
+			{handProgression.length > 0 && <HandProgression streets={handProgression} />}
 
 			<div class="prose">
 				<Content />
