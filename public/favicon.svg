@@ -1,5 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
-	<rect width="32" height="32" rx="7" fill="#10231a"/>
-	<circle cx="16" cy="16" r="10" fill="none" stroke="#2fa876" stroke-width="2"/>
-	<text x="16" y="21" font-family="-apple-system,Helvetica,Arial,sans-serif" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle">PH</text>
+	<circle cx="16" cy="16" r="16" fill="#10231a"/>
+	<circle cx="16" cy="16" r="15.2" fill="none" stroke="#e3b566" stroke-width="1.6" stroke-dasharray="3.6 3.2"/>
+	<circle cx="16" cy="16" r="12.5" fill="none" stroke="#e3b566" stroke-width="1"/>
+	<text x="16" y="21.5" font-family="Georgia, 'Times New Roman', serif" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">&#9824;</text>
 </svg>

@@ -32,14 +32,24 @@
 	--color-accent: #b8863b; /* チップ・カード風のゴールドアクセント(評価・エクイティ強調用) */
 	--color-accent-bg: #fbf1de;
 	--color-accent-border: #e3b566;
+	--color-gold-light: #f0d38f; /* 濃色(ヘッダー/ヒーロー/フッター)背景の上で使う明るいゴールド。AAコントラスト確保 */
 
 	--color-warn-bg: #fffbeb;
 	--color-warn-border: #f59e0b;
 	--color-warn-text: #78350f;
 
+	/* --- ワインレッド(装飾アクセント。トランプのハート/ダイヤと被らない用途で使う) --- */
+	--color-wine: #7a1f3a;
+	--color-wine-dark: #591629;
+	--color-wine-bg: #fbecf0;
+
 	/* --- カードバッジ(ランク+スート)用: ハート/ダイヤ=赤、スペード/クラブ=黒 --- */
 	--color-card-red: #b91c1c; /* 白文字でAAコントラストを確保した赤 */
 	--color-card-black: var(--color-ink);
+
+	/* --- ポーカーテーブルの「フェルト」を意識したダーク系グラデーション --- */
+	/* ヘッダー/ヒーロー/フッターなど、サイトの「顔」となる箇所の背景に使う。 */
+	--gradient-felt: linear-gradient(160deg, #0f3a28 0%, #10231a 55%, #1a1512 100%);
 
 	/* --- タイポグラフィ --- */
 	--font-sans:
@@ -141,4 +151,17 @@ a {
 }
 .card-badge__suit {
 	font-size: 1.05em;
+}
+
+/*
+ * スート記号の装飾用ディバイダー(♠ ♥ ♦ ♣)。
+ * Header / Footer / トップページのヒーロー等、サイトの「顔」部分でポーカーらしさを
+ * さりげなく演出するための共通パーツ。装飾目的のため aria-hidden="true" を付けて使うこと。
+ */
+.suit-divider {
+	display: inline-flex;
+	gap: 0.6em;
+	font-size: 0.9rem;
+	letter-spacing: 0.05em;
+	line-height: 1;
 }

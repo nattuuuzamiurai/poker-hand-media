@@ -3,6 +3,7 @@ title: "トリトンJeju II、放送史上最大級1,100万ドルポットにお
 targetKeyword: ["トリトンポーカー 最大ポット 解説", "Foxen Ketola 11M pot 解説"]
 metaDescription: "トリトンJeju IIで発生した放送史上最大級の1,100万ドルポット。フラッシュを握るアレックス・フォクセンはなぜリバーのオールインをコールしたのか、その思考プロセスと評価を独自解説します。"
 category: "トリトンポーカー"
+featuredHands: ["K♣J♥", "8♦6♦"]
 pubDate: 2026-07-23
 draft: true
 author: "ポーカーハンドメディア編集部"
@@ -25,9 +26,11 @@ handProgression:
       - player: "オッシ・ケトラ"
         action: "オープンレイズ(ボタン兼SB、2.5bb)"
         amount: "$150,000"
+        hand: ["K♣", "J♥"]
       - player: "アレックス・フォクセン"
         action: "コール(BB)"
         amount: "$150,000"
+        hand: ["8♦", "6♦"]
   - street: "フロップ"
     board: ["K♦", "J♦", "8♣"]
     pot: "$300,000"

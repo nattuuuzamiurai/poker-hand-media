@@ -4,8 +4,10 @@ const year = new Date().getFullYear();
 ---
 
 <footer class="site-footer">
+	<div class="site-footer__rail" aria-hidden="true"></div>
 	<div class="site-footer__inner">
 		<p class="site-footer__title">ポーカーハンドメディア</p>
+		<p class="suit-divider site-footer__suits" aria-hidden="true"><span>♠</span><span>♥</span><span>♦</span><span>♣</span></p>
 		<p class="site-footer__desc">
 			WSOP・トリトンポーカーなど大型大会で起きた「盛り上がったハンド」を厳選し、プレイヤーの思考プロセスとその判断の評価を独自解説するメディアです。配信・記事の書き起こしではなく、独自の視点でハンドを読み解きます。
 		</p>
@@ -19,7 +21,12 @@ const year = new Date().getFullYear();
 <style>
 	.site-footer {
 		margin-top: 4em;
-		background: var(--color-ink);
+		background: var(--gradient-felt);
+	}
+	.site-footer__rail {
+		height: 3px;
+		background: linear-gradient(90deg, transparent, var(--color-gold-light) 20%, var(--color-accent) 50%, var(--color-gold-light) 80%, transparent);
+		opacity: 0.9;
 	}
 	.site-footer__inner {
 		max-width: var(--page-width);
@@ -30,7 +37,12 @@ const year = new Date().getFullYear();
 		font-size: 1.05rem;
 		font-weight: 800;
 		color: #fff;
-		margin: 0 0 0.6em;
+		margin: 0 0 0.5em;
+	}
+	.site-footer__suits {
+		color: var(--color-gold-light);
+		opacity: 0.85;
+		margin: 0 0 1.1em;
 	}
 	.site-footer__desc {
 		font-size: 0.88rem;

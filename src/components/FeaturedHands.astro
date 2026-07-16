@@ -1,0 +1,77 @@
+---
+// 主役ハンドバッジ: 記事の「見どころハンド」(例: K♣J♥ vs 8♦6♦)を大きめのカードバッジで
+// 目立たせて表示する部品。記事詳細ページのH1タイトル直下、およびトップページの記事一覧カードで使う。
+//
+// フロントマターの `featuredHands`(src/content.config.ts)をそのまま渡す想定:
+// `<FeaturedHands hands={featuredHands} />`
+// 配列の各要素は「A♠A♦」のように連結したカード表記の文字列(本文中の慣習と同じ書き方)。
+// 2要素以上ある場合は "vs" 区切りで並べる。省略・空配列の場合は何も描画しない
+// (用語解説記事など、特定のハンドの前提を持たない記事向け)。
+import CardBadge from './CardBadge.astro';
+import { splitCardsText } from '../lib/cards';
+
+interface Props {
+	/** 例: ["K♣J♥", "8♦6♦"]。3-wayポット等では3要素以上も可 */
+	hands?: string[];
+	/** "large" = 記事詳細のタイトル直下用(大きめ)。"compact" = トップページの記事カード用 */
+	size?: 'large' | 'compact';
+}
+
+const { hands, size = 'large' } = Astro.props;
+const handGroups = (hands ?? []).map((hand) => splitCardsText(hand)).filter((cards) => cards.length > 0);
+---
+
+{
+	handGroups.length > 0 && (
+		<div class={`featured-hands featured-hands--${size}`} aria-label="この記事の見どころハンド">
+			{handGroups.map((cards, i) => (
+				<>
+					{i > 0 && <span class="featured-hands__vs">vs</span>}
+					<span class="featured-hands__hand">
+						{cards.map((card) => (
+							<CardBadge card={card} />
+						))}
+					</span>
+				</>
+			))}
+		</div>
+	)
+}
+
+<style>
+	.featured-hands {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 0.5em;
+	}
+	.featured-hands__hand {
+		display: inline-flex;
+		align-items: center;
+	}
+	.featured-hands__vs {
+		font-size: 0.75em;
+		font-weight: 800;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		color: var(--color-accent);
+	}
+
+	/* タイトル直下用: 大きめ表示(card-badge は em 単位なのでここでスケールする) */
+	.featured-hands--large {
+		font-size: 1.5rem;
+		margin: 0 0 1.1em;
+	}
+
+	/* 記事一覧カード用: 控えめなサイズ */
+	.featured-hands--compact {
+		font-size: 1.05rem;
+		margin: 0 0 0.9em;
+	}
+
+	@media (max-width: 480px) {
+		.featured-hands--large {
+			font-size: 1.2rem;
+		}
+	}
+</style>

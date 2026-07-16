@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import FeaturedHands from '../components/FeaturedHands.astro';
 
 // ローカル開発中はdraft記事もレイアウト確認できるよう表示する(本番ビルドでは除外)。
 // 詳細: src/content.config.ts の draft フィールドのコメント参照。
@@ -9,6 +10,33 @@ const articles = (
 ).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 const dateFormatter = new Intl.DateTimeFormat('ja-JP', { year: 'numeric', month: 'short', day: 'numeric' });
+
+// --- 大会(tournament)別グルーピング ---
+// 社長要望(2026-07): 記事をフラットに並べるのではなく、大会・イベントごとに区分けして表示する。
+// 1つの大会に紐づく記事数は今後増減する前提(「出せるだけ出す」方針)のため、
+// グループ内はこれまで通りグリッドで、記事数に応じて自然に折り返す構成にしている。
+// `tournament` フィールド(src/content.config.ts)が無い記事(用語解説記事等)は
+// 「大会に紐づかない記事」として OTHER_GROUP_LABEL の特別枠にまとめる。
+const OTHER_GROUP_LABEL = '用語解説・特集記事';
+
+const groupsMap = new Map<string, typeof articles>();
+for (const article of articles) {
+	const key = article.data.tournament?.trim() || OTHER_GROUP_LABEL;
+	const list = groupsMap.get(key) ?? [];
+	list.push(article);
+	groupsMap.set(key, list);
+}
+
+// グループの並び順: 各グループの最新記事(pubDate)が新しい順。
+// articles自体が既にpubDate降順のため、各グループ内の並び順(items[0]が最新)はそのまま維持される。
+// 「用語解説・特集記事」は特定の大会に紐づかない性質上、常に最後尾に固定する。
+const tournamentGroups = [...groupsMap.entries()]
+	.map(([tournament, items]) => ({ tournament, items }))
+	.sort((a, b) => {
+		if (a.tournament === OTHER_GROUP_LABEL) return 1;
+		if (b.tournament === OTHER_GROUP_LABEL) return -1;
+		return b.items[0].data.pubDate.valueOf() - a.items[0].data.pubDate.valueOf();
+	});
 ---
 
 <BaseLayout
@@ -23,36 +51,55 @@ const dateFormatter = new Intl.DateTimeFormat('ja-JP', { year: 'numeric', month:
 			<p class="hero__lead">
 				WSOP・トリトンポーカーなど大型大会の配信・解説を情報源に、本当に見るべき「盛り上がったハンド」だけを厳選。プレイヤーが何を考えてそのプレイを選んだのか、その判断は結果的に妥当だったのかを独自の視点で解説します。
 			</p>
+			<p class="suit-divider hero__suits" aria-hidden="true"><span>♠</span><span>♥</span><span>♦</span><span>♣</span></p>
 		</section>
 
 		<section class="article-section">
 			<div class="article-section__head">
-				<h2 class="section-title">記事一覧</h2>
-				<p class="section-count">{articles.length}件の記事</p>
+				<h2 class="section-title">大会・特集別 記事一覧</h2>
+				<p class="section-count">{articles.length}件の記事 / {tournamentGroups.length}カテゴリ</p>
 			</div>
 
-			<div class="article-grid">
+			{
+				articles.length === 0 && (
+					<p class="article-empty">まだ公開記事がありません。近日中に初回記事を掲載予定です。</p>
+				)
+			}
+
+			<div class="tournament-groups">
 				{
-					articles.length === 0 && (
-						<p class="article-empty">まだ公開記事がありません。近日中に初回記事を掲載予定です。</p>
-					)
-				}
-				{
-					articles.map((article) => (
-						<article class="article-card">
-							{article.data.draft && <span class="article-card__draft">DRAFT</span>}
-							{article.data.category && <span class="article-card__category">{article.data.category}</span>}
-							<h3 class="article-card__title">
-								<a href={`/articles/${article.id}/`}>{article.data.title}</a>
-							</h3>
-							<p class="article-card__desc">{article.data.metaDescription}</p>
-							<div class="article-card__meta">
-								<time datetime={article.data.pubDate.toISOString()}>{dateFormatter.format(article.data.pubDate)}</time>
-								<span class="article-card__readmore" aria-hidden="true">
-									続きを読む →
-								</span>
+					tournamentGroups.map((group) => (
+						<section class="tournament-group">
+							<div class="tournament-group__head">
+								<h3 class="tournament-group__title">
+									<span class="tournament-group__icon" aria-hidden="true">
+										{group.tournament === OTHER_GROUP_LABEL ? '♣' : '♠'}
+									</span>
+									{group.tournament}
+								</h3>
+								<span class="tournament-group__count">{group.items.length}件</span>
 							</div>
-						</article>
+
+							<div class="article-grid">
+								{group.items.map((article) => (
+									<article class="article-card">
+										{article.data.draft && <span class="article-card__draft">DRAFT</span>}
+										{article.data.category && <span class="article-card__category">{article.data.category}</span>}
+										<FeaturedHands hands={article.data.featuredHands} size="compact" />
+										<h3 class="article-card__title">
+											<a href={`/articles/${article.id}/`}>{article.data.title}</a>
+										</h3>
+										<p class="article-card__desc">{article.data.metaDescription}</p>
+										<div class="article-card__meta">
+											<time datetime={article.data.pubDate.toISOString()}>{dateFormatter.format(article.data.pubDate)}</time>
+											<span class="article-card__readmore" aria-hidden="true">
+												続きを読む →
+											</span>
+										</div>
+									</article>
+								))}
+							</div>
+						</section>
 					))
 				}
 			</div>
@@ -67,48 +114,77 @@ const dateFormatter = new Intl.DateTimeFormat('ja-JP', { year: 'numeric', month:
 		padding: 0 1.25em;
 	}
 
+	/*
+	 * ヒーロー: ポーカーテーブルの「フェルト」を意識した深緑〜黒のグラデーションパネル。
+	 * サイトの「顔」となる箇所のため、ここだけ濃色背景+白文字にして存在感を出す。
+	 */
 	.hero {
 		position: relative;
-		padding: 4em 0 3em;
+		margin: 1.6em 0 3em;
+		padding: 3.6em 2em;
 		text-align: center;
 		overflow: hidden;
+		border-radius: var(--radius-lg);
+		background: var(--gradient-felt);
+		border: 1px solid var(--color-accent-border);
+		box-shadow: var(--shadow-lg);
 	}
 	.hero::before {
+		content: '♠';
+		position: absolute;
+		right: -0.35em;
+		top: -0.55em;
+		font-size: 11rem;
+		line-height: 1;
+		color: rgba(255, 255, 255, 0.06);
+		pointer-events: none;
+	}
+	.hero::after {
 		content: '';
 		position: absolute;
-		inset: -20% -10% auto -10%;
-		height: 320px;
+		inset: 0;
 		background:
-			radial-gradient(circle at 30% 30%, var(--color-brand-bg-strong), transparent 60%),
-			radial-gradient(circle at 75% 20%, var(--color-brand-bg), transparent 55%);
-		z-index: -1;
-		filter: blur(10px);
+			radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.07), transparent 45%),
+			radial-gradient(circle at 85% 80%, rgba(227, 181, 102, 0.12), transparent 50%);
+		pointer-events: none;
 	}
 	.hero__eyebrow {
+		position: relative;
 		display: inline-block;
 		font-size: 0.8rem;
 		font-weight: 700;
 		letter-spacing: 0.08em;
-		color: var(--color-brand);
-		background: var(--color-brand-bg-strong);
+		color: var(--color-gold-light);
+		background: rgba(255, 255, 255, 0.1);
+		border: 1px solid rgba(240, 211, 143, 0.35);
 		padding: 0.35em 0.9em;
 		border-radius: 999px;
 		margin: 0 0 1.2em;
 	}
 	.hero__title {
+		position: relative;
 		font-size: clamp(2.1rem, 5vw, 2.9rem);
 		font-weight: 800;
-		color: var(--color-ink);
+		color: #fff;
 		margin: 0 0 0.6em;
 		letter-spacing: -0.01em;
 	}
 	.hero__lead {
+		position: relative;
 		max-width: 620px;
 		margin: 0 auto;
-		color: var(--color-text-muted);
+		color: rgba(255, 255, 255, 0.82);
 		font-size: 1.05rem;
 		line-height: 1.9;
 		overflow-wrap: break-word;
+	}
+	.hero__suits {
+		position: relative;
+		justify-content: center;
+		margin: 1.5em 0 0;
+		color: var(--color-gold-light);
+		font-size: 1.15rem;
+		opacity: 0.85;
 	}
 
 	.article-section {
@@ -121,7 +197,7 @@ const dateFormatter = new Intl.DateTimeFormat('ja-JP', { year: 'numeric', month:
 		gap: 1em;
 		border-bottom: 2px solid var(--color-border);
 		padding-bottom: 0.8em;
-		margin-bottom: 2em;
+		margin-bottom: 2.2em;
 	}
 	.section-title {
 		position: relative;
@@ -139,7 +215,7 @@ const dateFormatter = new Intl.DateTimeFormat('ja-JP', { year: 'numeric', month:
 		bottom: 0.15em;
 		width: 5px;
 		border-radius: 3px;
-		background: linear-gradient(180deg, var(--color-brand-light), var(--color-brand));
+		background: linear-gradient(180deg, var(--color-accent-border), var(--color-accent));
 	}
 	.section-count {
 		margin: 0;
@@ -150,6 +226,48 @@ const dateFormatter = new Intl.DateTimeFormat('ja-JP', { year: 'numeric', month:
 	.article-empty {
 		color: var(--color-text-muted);
 		font-size: 0.95rem;
+	}
+
+	/* --- 大会・特集別グループ --- */
+	.tournament-groups {
+		display: flex;
+		flex-direction: column;
+		gap: 3em;
+	}
+	.tournament-group__head {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		gap: 0.75em;
+		margin-bottom: 1.3em;
+	}
+	.tournament-group__title {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5em;
+		font-size: 1.02rem;
+		font-weight: 800;
+		color: #fff;
+		background: var(--gradient-felt);
+		padding: 0.55em 1.15em 0.55em 0.95em;
+		border-radius: 999px;
+		border: 1px solid var(--color-accent-border);
+		margin: 0;
+		overflow-wrap: break-word;
+	}
+	.tournament-group__icon {
+		color: var(--color-gold-light);
+		font-size: 1.05em;
+	}
+	.tournament-group__count {
+		flex-shrink: 0;
+		font-size: 0.8rem;
+		font-weight: 700;
+		color: var(--color-text-muted);
+		background: var(--color-bg-muted);
+		padding: 0.35em 0.85em;
+		border-radius: 999px;
 	}
 
 	.article-grid {
@@ -164,6 +282,7 @@ const dateFormatter = new Intl.DateTimeFormat('ja-JP', { year: 'numeric', month:
 		flex-direction: column;
 		background: var(--color-bg);
 		border: 1px solid var(--color-border);
+		border-top: 3px solid transparent;
 		border-radius: var(--radius-lg);
 		padding: 1.5em;
 		box-shadow: var(--shadow-sm);
@@ -177,6 +296,7 @@ const dateFormatter = new Intl.DateTimeFormat('ja-JP', { year: 'numeric', month:
 		transform: translateY(-4px);
 		box-shadow: var(--shadow-md);
 		border-color: var(--color-border-strong);
+		border-top-color: var(--color-accent);
 	}
 	.article-card__draft {
 		align-self: flex-start;
@@ -197,7 +317,7 @@ const dateFormatter = new Intl.DateTimeFormat('ja-JP', { year: 'numeric', month:
 		background: var(--color-brand-bg-strong);
 		padding: 0.3em 0.75em;
 		border-radius: 999px;
-		margin-bottom: 0.9em;
+		margin-bottom: 0.7em;
 	}
 	.article-card__title {
 		font-size: 1.1rem;
@@ -249,12 +369,19 @@ const dateFormatter = new Intl.DateTimeFormat('ja-JP', { year: 'numeric', month:
 
 	@media (max-width: 640px) {
 		.hero {
-			padding: 2.5em 0 2em;
+			padding: 2.6em 1.3em;
+			margin: 1.2em 0 2.2em;
+		}
+		.hero::before {
+			font-size: 7rem;
 		}
 		.article-section__head {
 			flex-direction: column;
 			align-items: flex-start;
 			gap: 0.3em;
+		}
+		.tournament-group__title {
+			font-size: 0.92rem;
 		}
 	}
 </style>

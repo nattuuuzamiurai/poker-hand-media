@@ -9,6 +9,7 @@ import SourceList from '../../components/SourceList.astro';
 import RelatedServices from '../../components/RelatedServices.astro';
 import TournamentInfoBar from '../../components/TournamentInfoBar.astro';
 import HandProgression from '../../components/HandProgression.astro';
+import FeaturedHands from '../../components/FeaturedHands.astro';
 
 export async function getStaticPaths() {
 	// 本番ビルドではdraft記事を除外する(レビュー部のGOが出た記事のみ公開)。
@@ -39,6 +40,7 @@ const {
 	draft,
 	tableContext,
 	handProgression,
+	featuredHands,
 } = article.data;
 
 const canonicalPath = `/articles/${article.id}/`;
@@ -91,6 +93,7 @@ const articleJsonLd = {
 				{draft && <p class="article__draft-banner">DRAFT(未公開・レイアウト確認用のプレースホルダー記事です)</p>}
 				{category && <p class="article__category">{category}</p>}
 				<h1 class="article__title">{title}</h1>
+				<FeaturedHands hands={featuredHands} size="large" />
 				<p class="article__meta">
 					公開日: <time datetime={publishedISO}>{pubDate.toLocaleDateString('ja-JP')}</time>
 					{updatedDate && (

@@ -16,6 +16,8 @@ interface HandAction {
 	action: string;
 	/** 額(表示用文字列)。フォールド等、額を伴わないアクションでは省略可 */
 	amount?: string;
+	/** そのプレイヤーのハンド(ホールカード。例: ["K♣", "J♥"])。主にプリフロップで設定する。省略可 */
+	hand?: string[];
 }
 
 interface HandStreet {
@@ -57,7 +59,16 @@ const { streets } = Astro.props;
 						<ul class="hand-progression__actions">
 							{s.actions.map((a) => (
 								<li>
-									<span class="hand-progression__player">{a.player}</span>
+									<span class="hand-progression__player">
+										{a.player}
+										{a.hand && a.hand.length > 0 && (
+											<span class="hand-progression__hole-cards">
+												{a.hand.map((card) => (
+													<CardBadge card={card} />
+												))}
+											</span>
+										)}
+									</span>
 									<span class="hand-progression__action">{a.action}</span>
 									{a.amount && <span class="hand-progression__amount">{a.amount}</span>}
 								</li>
@@ -142,6 +153,20 @@ const { streets } = Astro.props;
 	.hand-progression__player {
 		font-weight: 700;
 		color: var(--color-ink);
+	}
+	.hand-progression__hole-cards {
+		display: inline-flex;
+		align-items: baseline;
+		font-weight: 400;
+		margin-left: 0.3em;
+	}
+	.hand-progression__hole-cards::before {
+		content: '(';
+		color: var(--color-text-muted);
+	}
+	.hand-progression__hole-cards::after {
+		content: ')';
+		color: var(--color-text-muted);
 	}
 	.hand-progression__action {
 		color: var(--color-text);

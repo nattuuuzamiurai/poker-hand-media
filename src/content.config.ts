@@ -31,6 +31,16 @@ const articles = defineCollection({
 		metaDescription: z.string().max(160), // メタディスクリプション(検索結果に表示。120〜160字目安)
 		category: z.string().optional(), // 記事カテゴリ(例: "WSOP", "トリトンポーカー", "用語解説")
 
+		// --- 主役ハンド(タイトル周りの視覚化用) ---
+		// 記事のH1タイトル直下、およびトップページの記事一覧カードに、このハンドを
+		// 大きめのカードバッジで表示する(FeaturedHandsコンポーネント)。
+		// 配列の各要素はカード表記(下記5-1参照)を連結した1人分のハンド文字列
+		// (例: "K♣J♥")。2要素ならヘッズアップ、3要素なら3-wayポットのように、
+		// 対戦人数に応じて可変長で書ける。要素が2つ以上ある場合は "vs" 区切りで並べて表示する。
+		// 用語解説記事など特定のハンドが無い記事では省略してよい(省略時は何も表示されない)。
+		// 詳細・書き方は docs/article-writing-guide.md 参照。
+		featuredHands: z.array(z.string()).optional(),
+
 		// --- 日付 ---
 		pubDate: z.coerce.date(), // 公開日
 		updatedDate: z.coerce.date().optional(), // 更新日(あれば dateModified に反映)
@@ -91,6 +101,10 @@ const articles = defineCollection({
 								player: z.string(),
 								action: z.string(), // "オープンレイズ" "3ベット" "コール" "ベット" "フォールド" 等
 								amount: z.string().optional(), // 額(表示用文字列)。フォールド等では省略可
+								// このアクション時点でのそのプレイヤーのハンド(ホールカード)。例: ["K♣", "J♥"]。
+								// 主にプリフロップのアクションに設定すると、選手名の横にカードバッジで
+								// 表示される(HandProgressionコンポーネント)。情報源に記載が無い場合は省略してよい。
+								hand: z.array(z.string()).optional(),
 							}),
 						)
 						.default([]),

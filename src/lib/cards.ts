@@ -73,3 +73,20 @@ export const CARD_TEXT_PATTERN = /(10|[2-9TJQKA])([♠♥♦♣])/g;
 export function suitSymbolColorClass(suitSymbol: string): 'card-badge--red' | 'card-badge--black' {
 	return suitSymbol === '♥' || suitSymbol === '♦' ? 'card-badge--red' : 'card-badge--black';
 }
+
+/**
+ * "K♣J♥" のように連結して書かれたハンド表記を、1枚ずつの表記の配列に分割する
+ * (例: "K♣J♥" → ["K♣", "J♥"])。
+ *
+ * frontmatterの `featuredHands`(記事タイトル周りに表示する主役ハンド)のように、
+ * 執筆側が本文中と同じ「ランク+スート記号を連結しただけ」の慣れた書き方をそのまま
+ * 使えるようにするためのユーティリティ。`FeaturedHands.astro` で使用する。
+ * スート記号を伴わない表記・解釈できない文字は無視される。
+ */
+export function splitCardsText(input: string): string[] {
+	// CARD_TEXT_PATTERN は他所(rehype-card-badges.ts)で手動 lastIndex 管理の
+	// exec ループに使われる共有インスタンスのため、ここでは新しい RegExp を都度生成して
+	// 状態を共有しないようにする。
+	const pattern = new RegExp(CARD_TEXT_PATTERN.source, CARD_TEXT_PATTERN.flags);
+	return input.match(pattern) ?? [];
+}
