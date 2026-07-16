@@ -7,7 +7,7 @@ featuredHands: ["A♠A♦", "K♣K♦", "K♠K♥"]
 pubDate: 2026-07-19
 draft: true
 author: "ポーカーハンドメディア編集部"
-editorialNote: "PokerNewsの記事『Aces Vs Kings Vs Kings for Hundreds of Big Blinds in the WSOP Main Event』を情報源に執筆しました。記事に記載された具体的なベット額・アクション順序(オープンレイズ5,500→3ベット20,000→4ベット70,000→5ベット150,000→ラドクリフの153,000オールイン→マターンの300,000再レイズ→トレドのフォールド、最終ボード9♠6♥2♣7♠J♦)、およびブラインドレベル(1,000/2,500)・残り人数(3,000人以上)・マターンのポジション(アーリーポジション)は原文の記載をそのまま採用しています。総エントリー数(9,208人)は当該記事に記載が無かったため、PokerNews別記事『WSOP Main Event Registration Closes』の公式集計を追加の出典として採用しました。平均スタック、トレド本人とマターンのハンド開始前スタック、両者の正確なポジション(マターンの『アーリーポジション』以外)、および最終確定ポット額は、いずれの出典にも明記が無いため数値化せず省略しています。各プレイヤーがそのアクションに至った思考プロセスの部分は、行動パターン(誰がコールで留め、誰が追加でレイズしたか)から編集部が独自に読み解いたものです。GTOソルバー等の厳密計算は行わず、一般に知られたAA対KKの対戦成績の目安を参考にしています。"
+editorialNote: "PokerNewsの記事『Aces Vs Kings Vs Kings for Hundreds of Big Blinds in the WSOP Main Event』を情報源に執筆しました。記事に記載された具体的なベット額・アクション順序(オープンレイズ5,500→3ベット20,000→4ベット70,000→5ベット150,000→ラドクリフの153,000オールイン→マターンの300,000再レイズ→トレドのフォールド、最終ボード9♠6♥2♣7♠J♦)、およびブラインドレベル(1,000/2,500)・残り人数(3,000人以上)・マターンのポジション(アーリーポジション)は原文の記載をそのまま採用しています。総エントリー数(9,208人)は当該記事に記載が無かったため、PokerNews別記事『WSOP Main Event Registration Closes』の公式集計を追加の出典として採用しました。平均スタック、トレド本人とマターンのハンド開始前スタック、両者の正確なポジション(マターンの『アーリーポジション』以外)、および最終確定ポット額は、いずれの出典にも明記が無いため数値化せず省略しています。各プレイヤーがそのアクションに至った思考プロセスの部分は、行動パターン(誰がコールで留め、誰が追加でレイズしたか)から編集部が独自に読み解いたものです。GTOソルバー等の厳密計算は行わず、一般に知られたAA対KKの対戦成績の目安を参考にしています。追加した『登場選手』セクションは、Hendon Mob Poker Databaseの各選手プロフィール、およびMSPT・World Poker Tourの選手情報ページを出典としています。年齢・国籍・生涯獲得賞金総額など、複数出典で確認できなかった項目(トレドの年齢・生涯獲得賞金総額、ラドクリフの年齢等)は数値を作文せず省略しています。トレドの『2025年3月のWPTベネチアンDeepStack Showdown優勝($31,711)』の記述については、2026年7月の品質管理部指摘を受けて出典を追加調査し、会場運営元Venetian Poker Roomの公式X(旧Twitter)アカウントによる優勝発表投稿(2025年3月17日付、DeepStack Showdown Event #39 $600 NLH、賞金$31,711)を裏付けとして`sources`に追加しました。"
 tournament: "WSOP 2026 メインイベント"
 players: ["アーノー・マターン", "デルミロ・トレド", "マシュー・ラドクリフ"]
 tableContext:
@@ -67,6 +67,14 @@ sources:
     url: "https://www.pokernews.com/news/2026/07/wsop-main-event-insane-pot-51804.htm"
   - label: "PokerNews: WSOP Main Event Registration Closes; How Big Did it Get?"
     url: "https://www.pokernews.com/news/2026/07/2026-wsop-main-event-total-entries-51795.htm"
+  - label: "Hendon Mob Poker Database: Arnaud Mattern"
+    url: "https://pokerdb.thehendonmob.com/player.php?a=r&n=42907"
+  - label: "Hendon Mob Poker Database: Matthew Radcliffe"
+    url: "https://pokerdb.thehendonmob.com/player.php?a=r&n=489972"
+  - label: "MSPT Player Details: Delmiro Toledo"
+    url: "https://msptpoker.com/Players/PlayerDetails.aspx?ProfileID=2979"
+  - label: "Venetian Poker Room(X/旧Twitter公式アカウント): DeepStack Showdown Event #39優勝発表(2025年3月17日、$31,711)"
+    url: "https://x.com/VenetianPoker/status/1901833110284865700"
 affiliateProducts: []
 relatedServices:
   - name: "ポーカートナメ成績表(poker-tourney-log)"
@@ -78,6 +86,20 @@ relatedServices:
 ---
 
 WSOP 2026メインイベント(総エントリー9,208人、史上4番目の規模)のDay3、ブラインド1,000/2,500、まだ3,000人以上が残る序盤のレベルで、テーブルを揺るがす三つ巴の大型ポットが発生した。A♠A♦のアーノー・マターン、K♣K♦のデルミロ・トレド、K♠K♥のマシュー・ラドクリフ。プレミアムハンド同士が同時に激突する展開自体が稀な上に、この一戦の主役は「勝った側」ではなく「土壇場で撤退した側」だった。本記事では、大金を投じた後にもかかわらずキングスをフォールドしたトレドの判断プロセスと、その評価を解説する。
+
+## 登場選手
+
+### アーノー・マターン
+
+フランス・パリ出身、46歳(1979年9月20日生まれ)。もともとバックギャモンの選手として名を馳せ、2004年からポーカーに転向した。2007年12月のEPTプラハシーズン4ノーリミットホールデムで優勝($928,443)し、Team PokerStars Proの一員となった経歴を持つ。Hendon Mob調べの生涯獲得賞金は約258万ドル。
+
+### デルミロ・トレド
+
+アメリカ・カリフォルニア州出身。MSPTやWPTベネチアンなど地域サーキットを主戦場とする選手で、2025年3月にはWPTベネチアン「DeepStack Showdown」で優勝($31,711)している。2026年WSOPメインイベントではこのハンドの後もDay3を勝ち進んだ。なお、年齢や生涯獲得賞金総額(包括的な数値)は出典で確認できなかったため省略する。
+
+### マシュー・ラドクリフ
+
+アメリカ・オハイオ州コロンバス出身。Heartland Poker Tour(HPT)を中心に活動してきた選手で、2019年のHPTローレンスバーグ、HPTハリウッド・コロンバス等の大会に参戦した記録がある。Hendon Mob調べの生涯獲得賞金は約11.8万ドル(37キャッシュ)。年齢は出典で確認できなかったため省略する。
 
 上のハンド進行表にある通り、この三つ巴のポットはプリフロップの段階で決着がついている。フロップ・ターン・リバーの3ストリートは、オールインが確定した後のランアウト(それ以上のベットが発生しない、単にカードが開かれるだけの局面)だ。
 
