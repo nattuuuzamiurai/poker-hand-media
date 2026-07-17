@@ -31,6 +31,7 @@ const {
 	author,
 	editorialNote,
 	tournament,
+	tournamentDate,
 	players,
 	sources,
 	affiliateProducts,
@@ -103,9 +104,11 @@ const articleJsonLd = {
 					)}
 					<span class="article__meta-sep">/ 執筆: {author}</span>
 				</p>
-				{(tournament || players.length > 0) && (
+				{(tournament || tournamentDate || players.length > 0) && (
 					<div class="article__hand-info">
 						{tournament && <span class="article__tournament">{tournament}</span>}
+						{/* 大会自体の開催日付(pubDate=記事の公開日とは別物)。判明している記事のみ表示される */}
+						{tournamentDate && <span class="article__tournament-date">開催: {tournamentDate}</span>}
 						{players.map((player) => (
 							<span class="article__player-tag">{player}</span>
 						))}
@@ -211,6 +214,15 @@ const articleJsonLd = {
 		color: var(--color-accent);
 		background: var(--color-accent-bg);
 		border: 1px solid var(--color-accent-border);
+		padding: 0.3em 0.8em;
+		border-radius: 999px;
+	}
+	.article__tournament-date {
+		font-size: 0.8rem;
+		font-weight: 600;
+		color: var(--color-text-muted);
+		background: var(--color-bg-subtle);
+		border: 1px solid var(--color-border);
 		padding: 0.3em 0.8em;
 		border-radius: 999px;
 	}

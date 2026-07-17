@@ -27,14 +27,47 @@ for (const article of articles) {
 	groupsMap.set(key, list);
 }
 
-// グループの並び順: 各グループの最新記事(pubDate)が新しい順。
-// articles自体が既にpubDate降順のため、各グループ内の並び順(items[0]が最新)はそのまま維持される。
-// 「用語解説・特集記事」は特定の大会に紐づかない性質上、常に最後尾に固定する。
+// 大会の開催日付(`tournamentDate`。src/content.config.ts)を並び替え用の数値に変換する。
+// 自由記述の文字列(例: "2026年7月14日" "2026年7月" "2026年7月14日〜7月16日")の先頭から
+// 西暦4桁(・月・日)を読み取り、year*10000 + month*100 + day 形式の数値にする
+// (期間表記は開始日側を採用する)。西暦4桁を含まない、またはフィールド自体が無い場合は
+// null を返す(＝「開催日不明」として扱う。憶測で数値を補わない)。
+function parseTournamentDateForSort(value: string | undefined): number | null {
+	if (!value) return null;
+	const match = value.match(/(\d{4})\D+(\d{1,2})?\D*(\d{1,2})?/);
+	if (!match) return null;
+	const year = Number(match[1]);
+	const month = match[2] ? Number(match[2]) : 1;
+	const day = match[3] ? Number(match[3]) : 1;
+	return year * 10000 + month * 100 + day;
+}
+
+// グループの並び順(社長要望 2026-07): 大会自体の開催日付(`tournamentDate`)が判明している
+// グループを優先し、その日付が新しい順に並べる。同じ大会グループ内の記事は原則同じ
+// `tournamentDate` を持つ想定のため、グループ内で最初に見つかった値を代表値として使う。
+// - `tournamentDate` が不明なグループ: 開発部の裁量により、これまで通り各グループ最新記事
+//   (pubDate)が新しい順のフォールバックで並べ、判明済みグループの下に配置する
+//   (不明なのに憶測で日付を割り当てて順序に組み込むことはしない)。
+// - 「用語解説・特集記事」は特定の大会に紐づかない性質上、常に最後尾に固定する(変更なし)。
 const tournamentGroups = [...groupsMap.entries()]
-	.map(([tournament, items]) => ({ tournament, items }))
+	.map(([tournament, items]) => {
+		const dateSourceArticle = items.find((item) => parseTournamentDateForSort(item.data.tournamentDate) !== null);
+		return {
+			tournament,
+			items,
+			tournamentDate: dateSourceArticle?.data.tournamentDate,
+			tournamentDateSort: dateSourceArticle ? parseTournamentDateForSort(dateSourceArticle.data.tournamentDate) : null,
+		};
+	})
 	.sort((a, b) => {
 		if (a.tournament === OTHER_GROUP_LABEL) return 1;
 		if (b.tournament === OTHER_GROUP_LABEL) return -1;
+		if (a.tournamentDateSort !== null && b.tournamentDateSort !== null) {
+			return b.tournamentDateSort - a.tournamentDateSort;
+		}
+		if (a.tournamentDateSort !== null) return -1;
+		if (b.tournamentDateSort !== null) return 1;
+		// articles自体が既にpubDate降順のため、各グループ内の並び順(items[0]が最新)はそのまま維持される。
 		return b.items[0].data.pubDate.valueOf() - a.items[0].data.pubDate.valueOf();
 	});
 ---
@@ -77,6 +110,7 @@ const tournamentGroups = [...groupsMap.entries()]
 									</span>
 									{group.tournament}
 								</h3>
+								{group.tournamentDate && <span class="tournament-group__date">開催: {group.tournamentDate}</span>}
 								<span class="tournament-group__count">{group.items.length}件</span>
 							</div>
 
@@ -259,6 +293,16 @@ const tournamentGroups = [...groupsMap.entries()]
 	.tournament-group__icon {
 		color: var(--color-gold-light);
 		font-size: 1.05em;
+	}
+	.tournament-group__date {
+		flex-shrink: 0;
+		font-size: 0.8rem;
+		font-weight: 700;
+		color: var(--color-text-muted);
+		background: var(--color-bg);
+		border: 1px solid var(--color-border);
+		padding: 0.32em 0.85em;
+		border-radius: 999px;
 	}
 	.tournament-group__count {
 		flex-shrink: 0;

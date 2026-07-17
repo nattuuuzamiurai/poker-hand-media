@@ -63,6 +63,17 @@ const articles = defineCollection({
 
 		// --- ハンド情報(このメディア特有のメタデータ) ---
 		tournament: z.string().optional(), // 大会名・イベント名(例: "WSOP 2026 メインイベント")
+		// 大会(tournament)自体の開催日付。pubDate(記事の公開日)とは別物であることに注意
+		// (取材・執筆はハンド発生から日を置いて行われることが多く、両者は一致するとは限らない)。
+		// 任意フィールド。**取材元(sources)や本文に開催時期の記載が実際にある場合のみ入力する。
+		// このメディアは過去に大会の開催時期を「pubDateからの推測」等で無理に特定しようとして
+		// 事実誤認を起こした経緯がある(triton-one-jeju-wang-martirosian-fold-kings.md の
+		// editorialNote参照)ため、判明していない記事ではこのフィールドごと省略してよい(必須にしない)。**
+		// 文字列型のため、単一日付("2026年7月14日")・月単位("2026年7月")・期間
+		// ("2026年7月14日〜7月16日")のいずれの粒度でもそのまま書ける。
+		// トップページのソート(src/pages/index.astro)がこの文字列から西暦4桁を含む年(・月・日)を
+		// 読み取って新しい順に並べるため、書式の詳細・書き方は docs/article-writing-guide.md 参照。
+		tournamentDate: z.string().optional(),
 		players: z.array(z.string()).default([]), // 登場プレイヤー名(タグ表示・将来の内部リンクハブに利用)
 
 		// --- トーナメント状況(情報バー。TournamentInfoBarコンポーネントで表示) ---
