@@ -7,7 +7,7 @@ featuredHands: ["Q♥10♦", "2♥2♦"]
 pubDate: 2026-07-23
 draft: true
 author: "ポーカーハンドメディア編集部"
-editorialNote: "PokerNewsのStrategy記事『\"I Can Beat Deuces\": Inside the Insane WSOP Millionaire Maker Soul Read』(GTO Wizardによる分析記事)を主要な情報源に執筆しました。両者のホールカード(フェアチャイルドのQ♥10♦、グレビッチの2♥2♦)、6人テーブルの各プレイヤーのポジション・スタック額(モンロイグ53,000,000〈LJ〉、ガフォード13,000,000〈HJ〉、フェアチャイルド18,000,000〈CO〉、フリードマン22,000,000〈BTN〉、ペン15,000,000〈SB〉、グレビッチ20,000,000〈BB〉)、プリフロップからリバーまでの具体的なベット額・ポットサイズ、テーブルトーク(グレビッチ『クイーンテンでフロップを完成させていたのか?』、フェアチャイルド『ポケットデュースになら勝てる』というやり取り)、GTO Wizardによるレンジ構成の分析(フェアチャイルドのフロップチェックがQToを中心としたトラップ戦略としてソルバー的に妥当であること、グレビッチのターンの先制ベットがフェアチャイルドの『キャップされたレンジ』〈33〜99等〉を突く合理的なブラフだったこと)は、いずれも同記事の原文記載をそのまま採用しています。リバーでフェアチャイルドがコールされていた場合の最終ポット額は原文に明記が無かったため数値化していません。追加した『登場選手』セクションは、poker.org『Meet the WSOP Millionaire Maker final table』(フェアチャイルドの出身地・通算収支・過去のベスト戦績)、PokerNews『How a \"Horrible\" Crypto Downswing Turned This 22-Year-Old Into a Poker Crusher』(グレビッチの年齢・経歴)、PokerNews『After Three Misses, Joseph Liberta Conquers WSOP Milly Maker For $1.25 Million』(フェアチャイルド4位・$530,000、グレビッチ8位・$190,000という最終結果の記載)を出典としています。両者の具体的な思考プロセスの言語化部分(『なぜ罠を張ったか』『なぜこのタイミングでブラフを選んだか』)は、GTO Wizardのレンジ分析と記事に記録された行動パターンを踏まえて編集部が構成したものである点を明記します。"
+editorialNote: "PokerNewsのStrategy記事『\"I Can Beat Deuces\": Inside the Insane WSOP Millionaire Maker Soul Read』(GTO Wizardによる分析記事)を主要な情報源に執筆しました。両者のホールカード(フェアチャイルドのQ♥10♦、グレビッチの2♥2♦)、6人テーブルの各プレイヤーのポジション・スタック額(モンロイグ53,000,000〈LJ〉、ガフォード13,000,000〈HJ〉、フェアチャイルド18,000,000〈CO〉、フリードマン22,000,000〈BTN〉、ペン15,000,000〈SB〉、グレビッチ20,000,000〈BB〉)、プリフロップからリバーまでの具体的なベット額・ポットサイズ、テーブルトーク(グレビッチ『クイーンテンでフロップを完成させていたのか?』、フェアチャイルド『ポケットデュースになら勝てる』というやり取り)、GTO Wizardによるレンジ構成の分析(フェアチャイルドのフロップチェックがQToを中心としたトラップ戦略としてソルバー的に妥当であること、グレビッチのターンの先制ベットがフェアチャイルドの『キャップされたレンジ』〈33〜99等〉を突く合理的なブラフだったこと)は、いずれも同記事の原文記載をそのまま採用しています。リバーでフェアチャイルドがコールされていた場合の最終ポット額は原文に明記が無かったため数値化していません。追加した『登場選手』セクションは、poker.org『Meet the WSOP Millionaire Maker final table』(フェアチャイルドの出身地・通算収支・過去のベスト戦績)、PokerNews『How a \"Horrible\" Crypto Downswing Turned This 22-Year-Old Into a Poker Crusher』(グレビッチの年齢・経歴)、PokerNews『After Three Misses, Joseph Liberta Conquers WSOP Milly Maker For $1.25 Million』(フェアチャイルド4位・$530,000、グレビッチ8位・$190,000という最終結果の記載)を出典としています。両者の具体的な思考プロセスの言語化部分(『なぜ罠を張ったか』『なぜこのタイミングでブラフを選んだか』)は、GTO Wizardのレンジ分析と記事に記録された行動パターンを踏まえて編集部が構成したものである点を明記します。**参考動画について**: WSOP公式YouTubeチャンネル(World Series of Poker)が公開した『HIGHLIGHTS | $1,500 NLH Millionaire Maker | Day 4』(https://www.youtube.com/watch?v=_2DgXTfS4Ck)を本文に埋め込みました。本ハンドは残り13人(Day4、ファイナルテーブル進出前)の時点で発生したものであり、9人制のファイナルテーブル専用動画ではなくDay4のハイライト映像を選んでいます。同チャンネルの公式コンテンツであることはoEmbed APIのメタデータで確認済みですが、動画の概要欄やタイムスタンプ情報までは確認できず、本ハンド(フェアチャイルドのソウルリード)単体の場面が実際に含まれているかは確認できていません。そのため本文中にも正直にその旨を注記しています。"
 tournament: "WSOP 2026 Event #50: $1,500 Millionaire Maker"
 tournamentDate: "2026年6月"
 players: ["ハルフォード・フェアチャイルド", "ギャリー・グレビッチ"]
@@ -93,6 +93,12 @@ WSOP 2026 Event #50「$1,500ミリオネアメーカー」(総エントリー11,
 ### ギャリー・グレビッチ
 
 22歳、アメリカ・イリノイ州出身(現在はマイアミ在住)。10代半ばから6〜7年ほど暗号資産トレーダーとして活動していたが、2025年5月にフォートローダーデール空港でのフライト遅延をきっかけに立ち寄ったカジノで初めてライブトーナメントに参加し、そのままポーカーへ転向した。同年にはMSPTシカゴ・メインイベントで5位($30,807)に入るなど急速に結果を残しており、本大会以前にWSOPメインイベントをDay4(504位、$32,500)まで進めて「そのシーズン最年少のキャッシュ選手」になった実績もある。本ハンドの後、グレビッチは最終的に8位($190,000)でトーナメントを終えた。
+
+### 参考動画
+
+<iframe src="https://www.youtube.com/embed/_2DgXTfS4Ck" title="HIGHLIGHTS | $1,500 NLH Millionaire Maker | Day 4(World Series of Poker公式チャンネル)" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+> ⚠️ このハンド単体を切り出した公式クリップは見つからなかったため、WSOP公式YouTubeチャンネルが公開した該当Day(Day4、残り13人時点)のハイライト映像です。このハンドの場面が実際にこの映像に含まれているかどうかは確認できていません。
 
 ## プレイヤーの思考プロセス
 
