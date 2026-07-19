@@ -92,7 +92,7 @@ relatedServices:
 
 なお、この直後のハンドでもホルツは再び6-4のハンドを手にし、キアット・リーのポケットキングス、そしてこのハンドで敗れたばかりのテオロギスが今度はポケットジャックで残り24bbをオールインする場面に遭遇。ホルツがビッグブラインドから再度リシップし、Leeも34bbのスタックでコール。ホルツはフロップで6をヒットして生き残り、最終的にツーペアを完成させて両方のポケットペアをクラック、テオロギスをストーンバブルで敗退させた。この2つ目のハンドの具体的なボードカード・ベット額は原文に記載が無いため、本記事の構造化データには反映していない。
 
-※このハンド単体を切り出した公式クリップは見つからなかったため、以下はストーンバブル・ファイナルテーブルが行われたFinal Day全体の配信アーカイブ(Triton Poker公式YouTubeチャンネル)へのリンクです。
+※このハンド単体を切り出した公式クリップは見つからなかったため、以下はストーンバブル・ファイナルテーブルが行われたと編集部が判断したFinal Day全体の配信アーカイブ(Triton Poker公式YouTubeチャンネル)へのリンクです。バブル発生の正確なタイムスタンプは動画側で確認できていません。
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/jgcuuNtUNG0" title="$40K NLH Mystery Bounty – Event #5 (Final Day) | Triton SHRS Montenegro 2026" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
