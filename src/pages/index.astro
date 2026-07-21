@@ -71,6 +71,29 @@ const tournamentGroups = [...groupsMap.entries()]
 		// articles自体が既にpubDate降順のため、各グループ内の並び順(items[0]が最新)はそのまま維持される。
 		return b.items[0].data.pubDate.valueOf() - a.items[0].data.pubDate.valueOf();
 	});
+
+// トップページ用のJSON-LD(schema.org WebSite + Organization)。
+// 個々の記事ページのArticle構造化データ([...slug].astro参照)とは別に、
+// サイト全体としての基本情報をGoogle等の検索エンジンに伝える。
+const siteJsonLd = {
+	'@context': 'https://schema.org',
+	'@graph': [
+		{
+			'@type': 'WebSite',
+			name: 'ポーカーハンドメディア',
+			url: new URL(withBase(), Astro.site).toString(),
+			description:
+				'WSOP・トリトンポーカーなど大型大会で盛り上がったハンドだけを厳選し、プレイヤーの思考プロセスと判断の評価を独自解説するメディアです。',
+			inLanguage: 'ja',
+		},
+		{
+			'@type': 'Organization',
+			name: 'ポーカーハンドメディア編集部',
+			url: new URL(withBase(), Astro.site).toString(),
+			logo: new URL(withBase('favicon.svg'), Astro.site).toString(),
+		},
+	],
+};
 ---
 
 <BaseLayout
@@ -78,6 +101,9 @@ const tournamentGroups = [...groupsMap.entries()]
 	description="WSOP・トリトンポーカーなど大型大会で盛り上がったハンドだけを厳選し、プレイヤーの思考プロセスと判断の評価を独自解説するメディアです。"
 	canonicalPath="/"
 >
+	<Fragment slot="head">
+		<script type="application/ld+json" set:html={JSON.stringify(siteJsonLd)} is:inline />
+	</Fragment>
 	<main class="page">
 		<section class="hero">
 			<p class="hero__eyebrow">World Series of Poker × Triton Poker</p>
