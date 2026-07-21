@@ -5,11 +5,14 @@ import { unified } from '@astrojs/markdown-remark';
 import rehypeCardBadges from './src/lib/rehype-card-badges.ts';
 
 // https://astro.build/config
-// NOTE: `site` はCanonical URL/JSON-LD生成に使用する値。
-// 独自ドメイン未取得のため、暫定的にCloudflare Pages発行想定のプレースホルダードメインを設定している。
-// Cloudflare Pagesへの接続(docs/cloudflare-pages-setup.md参照)・独自ドメイン取得後、実際の値に書き換えること。
+// NOTE: `site`/`base` はCanonical URL・JSON-LD・アセットパス生成に使用する値。
+// 2026-07-22、社長指示によりGitHub Pages(https://nattuuuzamiurai.github.io/poker-hand-media/)で
+// 公開することになったため、GitHub Pagesのプロジェクトページ規約(ユーザーサイトではなくリポジトリ名がパスに乗る形式)
+// に合わせて site/base を設定している。将来的に独自ドメイン取得・Cloudflare Pages接続に切り替える場合は
+// site を実ドメインに、base を削除すること(docs/cloudflare-pages-setup.md参照、その場合は現在使っていない設定として残す)。
 export default defineConfig({
-	site: 'https://poker-hand-media.pages.dev',
+	site: 'https://nattuuuzamiurai.github.io',
+	base: '/poker-hand-media',
 	// sitemap: 実際にビルドされたページ(＝ getStaticPaths で draft: true を除外済みの記事)
 	// のみが自動的に対象になる。ビルド後の routes 一覧から生成されるため、
 	// 記事側の公開制御ロジック([...slug].astro の getStaticPaths フィルタ)と重複して

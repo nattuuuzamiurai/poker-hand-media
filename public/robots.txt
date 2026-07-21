@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://poker-hand-media.pages.dev/sitemap-index.xml
+Sitemap: https://nattuuuzamiurai.github.io/poker-hand-media/sitemap-index.xml

@@ -2,11 +2,12 @@
 // 全ページ共通のサイトヘッダー。サイト名・タグラインのみのシンプル構成。
 // 2026-07: ポーカーテーブルの「フェルト」を意識した深緑〜黒のグラデーションバーに変更し、
 // ロゴマークをトランプチップ風の丸バッジ(スート記号入り)にリニューアル。
+import { withBase } from '../lib/base-url';
 ---
 
 <header class="site-header">
 	<div class="site-header__inner">
-		<a href="/" class="site-header__brand">
+		<a href={withBase()} class="site-header__brand">
 			<span class="site-header__mark" aria-hidden="true">
 				<span class="site-header__mark-suit">♠</span>
 			</span>

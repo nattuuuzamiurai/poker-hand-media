@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import FeaturedHands from '../components/FeaturedHands.astro';
+import { withBase } from '../lib/base-url';
 
 // ローカル開発中はdraft記事もレイアウト確認できるよう表示する(本番ビルドでは除外)。
 // 詳細: src/content.config.ts の draft フィールドのコメント参照。
@@ -121,7 +122,7 @@ const tournamentGroups = [...groupsMap.entries()]
 										{article.data.category && <span class="article-card__category">{article.data.category}</span>}
 										<FeaturedHands hands={article.data.featuredHands} size="compact" />
 										<h3 class="article-card__title">
-											<a href={`/articles/${article.id}/`}>{article.data.title}</a>
+											<a href={withBase(`articles/${article.id}/`)}>{article.data.title}</a>
 										</h3>
 										<p class="article-card__desc">{article.data.metaDescription}</p>
 										<div class="article-card__meta">
