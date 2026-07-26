@@ -51,12 +51,13 @@ const gaMeasurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
 			</>
 		)}
 
+		<!-- Google Search Console サイト確認用(2026-07-26設定) -->
+		<meta name="google-site-verification" content="1N7mojzA7HZwLyKtWuFkMzuorJiLHphAl2Z3RRX5cew" />
+
 		<!--
-			Google Search Console サイト確認用 / Google AdSense 審査用タグは未設定。
-			理由: 本サイトは現時点でCloudflare Pages未接続・独自ドメイン未取得の開発段階のため、
-			GSC確認・AdSense審査はまだ申請していない(架空のIDを埋め込まないための意図的な未実装)。
+			Google AdSense 審査用タグは未設定。
+			理由: AdSenseはまだ申請していない(架空のIDを埋め込まないための意図的な未実装)。
 			申請後、以下のように実際のIDを追記すること(ai-jitsumu-navi の実装を参照):
-			<meta name="google-site-verification" content="実際の確認コード" />
 			<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXX" crossorigin="anonymous"></script>
 		-->
 
