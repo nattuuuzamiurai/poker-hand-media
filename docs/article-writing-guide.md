@@ -81,6 +81,20 @@ Markdownテーブルで書くと、ヘッダー強調+ストライプ模様の�
 | A | およそ6〜7割 |
 ```
 
+### 他記事への内部リンク
+
+他の記事へリンクする場合は、baseプレフィックス(`/poker-hand-media`)を**含めずに**書いてください。
+
+```markdown
+[トリプルバレルブラフの記事](/articles/triton-jeju-25k-wilson-triple-barrel-bluff-caught/)
+```
+
+`astro.config.mjs`に登録した`rehypeInternalLinks`(`src/lib/rehype-internal-links.ts`)が、
+ビルド時に`/`始まりのサイト内リンクへ自動的にbaseプレフィックスを補完する(2026-09導入)。
+`/poker-hand-media/articles/...`のように自分でbaseを書き足す必要はない
+(書いても二重に付くことはなく無害だが、将来base設定自体を変更した場合に追従できなくなるため非推奨)。
+外部URL・`#`始まりのページ内アンカーは対象外でそのまま出力される。
+
 ### 配信動画の埋め込み
 
 YouTube公式の埋め込みコード(`<iframe src="https://www.youtube.com/embed/...">`)を
